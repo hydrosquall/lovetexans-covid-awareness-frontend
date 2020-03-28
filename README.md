@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 https://nextjs.org/blog/create-next-app
 
+Converted Alex's app to React code (mostly): https://magic.reactjs.net/htmltojsx.htm
+
 ## Getting Started
 
 First, run the development server:

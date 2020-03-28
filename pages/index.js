@@ -1,84 +1,194 @@
 import Head from 'next/head'
 
+import React, { useState, useMemo, useEffect } from 'react';
+import { Formik } from "formik";
+import axios from "axios";
+
+
+// API Fetching
+const LION_BASE_URL = "https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev";
+const getMapUrl = (address) => {
+  return `${LION_BASE_URL}/lion_map?address=${encodeURIComponent(address)}`
+}
+const getSummaryUrl = () => {
+  return `${LION_BASE_URL}/lion_summary`;
+};
+
+const AddressForm = (props) => {
+  return <Formik
+    initialValues={{ email: "", password: "" }}
+    validate={values => {
+      const errors = {};
+      if (!values.address) {
+        errors.address = "Required";
+      }
+
+      return errors;
+    }}
+    onSubmit={(values, { setSubmitting }) => {
+      console.log("submitting");
+      setSubmitting(true);
+      props.setAddress(values.address);
+      setTimeout(() => {
+        setSubmitting(false);
+      }, 2000)
+    }}
+  >
+    {({
+      values,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      isSubmitting
+    }) => (
+        <form onSubmit={handleSubmit} className="form-inline">
+          <div className="form-group mb-2">
+            <input
+              type="text"
+              name="address"
+              className="form-control"
+              placeholder="101 AnyStreet, AnyCity, TX, ZipCode"
+              style={{ width: "300px" }}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.address}
+            />
+          </div>
+          <div className="form-group mx-sm-3 mb-2"></div>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isSubmitting}
+          >
+            Submit
+        </button>
+          {isSubmitting && <span> Submitted! </span>}
+          {/* <button type="submit" className="btn btn-primary" onclick="getLocation()">
+        Try Automatic Geolocation
+      </button> */}
+        </form>
+      )}
+  </Formik>;
+}
+
+const Summary = (props) => {
+  const {
+    oneHourDeaths,
+    oneHourPositives,
+    texasDeaths,
+    texasPositives
+  } = props.data;
+
+  return (
+    <>
+    <div id="textDescription">
+      <div id="oneHourData">
+        There are at least{" "}
+        <strong>
+          <span id="oneHourCases"> {oneHourPositives}</span> confirmed cases
+        </strong>{" "}
+        and{" "}
+        <strong>
+          <span id="oneHourDeaths">{oneHourDeaths}</span> Deaths
+        </strong>{" "}
+        within about a 1-hour drive of you.
+      </div>
+      <div className="texasInfo">
+        Texas has at least{" "}
+        <strong>
+          <span id="texasCases">{texasPositives}</span> confirmed cases
+        </strong>{" "}
+        and{" "}
+        <strong>
+          <span id="texasDeaths">{texasDeaths}</span> Deaths
+        </strong>{" "}
+        so far.
+      </div>
+      <div className="texasInfo">
+        102,302 Americans have been infected.{" "}
+        <strong>
+          <a
+            style={{ color: "red" }}
+            href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
+          >
+            Please stay home. Stay safe.{" "}
+          </a>
+        </strong>
+      </div>
+      <div id="americanTotal">
+        <a href style={{ float: "left" }}>
+          Watch a video about how this tool was built and why
+        </a>
+        <div style={{ float: "right" }}>
+          Updated: <span id="updatedMonth" />/<span id="updatedDay" /> at{" "}
+          <span id="updatedHour" /> CST
+        </div>
+      </div>
+    </div>
+    <style jsx>{`
+      .form-inline {
+          margin-top: 1em;
+          margin-bottom: 1em;
+        }
+
+        .btn {
+          padding: 10px 15px;
+          border: 0 none;
+          font-weight: 300;
+          letter-spacing: 1px;
+        }
+
+        .btn:focus,
+        .btn:active:focus,
+        .btn.active:focus {
+          outline: 0 none;
+        }
+
+        .btn-primary {
+          background: #aab2b4;
+          color: #ffffff;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active,
+        .btn-primary.active,
+        .open > .dropdown-toggle.btn-primary {
+          background: #94b4be;
+        }
+
+        .btn-primary:active,
+        .btn-primary.active {
+          background: #007299;
+          box-shadow: none;
+        }
+    `}</style>
+    </>
+  );
+}
 
 const App = () => {
+  const [address, setAddress] = useState('N Miller St, Rising Star, TX 76471');
+  const [summaryData, setSummaryData] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const url = getSummaryUrl();
+      const result = await axios(url, { params: { address } });
+      setSummaryData(result.data);
+    }
+    fetchData();
+  }, [address]);
+
 
   return (
     <>
       <div className="container">
         <div id="title">Officially Reported Covid-19 Cases Near You</div>
-        <form className="form-inline">
-          <div className="form-group mb-2">
-            <input
-              type="text"
-              className="form-control"
-              id="inputAddress"
-              placeholder="101 this street, thisCity, TX, zip"
-              style={{ width: "300px" }}
-            />
-          </div>
-          <div className="form-group mx-sm-3 mb-2"></div>
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-          <span> or </span>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onclick="getLocation()"
-          >
-            Try Automatic Geolocation
-          </button>
-        </form>
-        <div id="textDescription">
-          <div id="oneHourData">
-            There are at least{" "}
-            <strong>
-              <span id="oneHourCases" /> confirmed cases
-            </strong>{" "}
-            and{" "}
-            <strong>
-              <span id="oneHourDeaths" /> Deaths
-            </strong>{" "}
-            within about a 1-hour drive of you.
-          </div>
-          <div className="texasInfo">
-            Texas has at least{" "}
-            <strong>
-              <span id="texasCases" /> confirmed cases
-            </strong>{" "}
-            and{" "}
-            <strong>
-              <span id="texasDeaths" /> Deaths
-            </strong>{" "}
-            so far.
-          </div>
-          <div className="texasInfo">
-            102,302 Americans have been infected.{" "}
-            <strong>
-              <a
-                style={{ color: "red" }}
-                href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
-              >
-                Please stay home. Stay safe.{" "}
-              </a>
-            </strong>
-          </div>
-          <div id="americanTotal">
-            <a href style={{ float: "left" }}>
-              Watch a video about how this tool was built and why
-            </a>
-            <div style={{ float: "right" }}>
-              Updated: <span id="updatedMonth" />/<span id="updatedDay" /> at{" "}
-              <span id="updatedHour" /> CST
-            </div>
-          </div>
-        </div>
-        <iframe
-          src="https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev/lion_map?address=3214+Durango+Dr%2C+Pearland%2C+TX+77581"
-          id="map"
-          frameBorder={0}
-        />
+        <AddressForm setAddress={setAddress} />
+
+        {summaryData && <Summary data={summaryData} />}
+        <iframe src={getMapUrl(address)} id="map" frameBorder={0} />
         <div style={{ float: "right" }}>
           data: <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
         </div>
@@ -157,47 +267,11 @@ const App = () => {
           display: inline-block;
         }
 
-        .form-inline {
-          margin-top: 1em;
-          margin-bottom: 1em;
-        }
 
-        .btn {
-          padding: 10px 15;
-          border: 0 none;
-          font-weight: 300;
-          letter-spacing: 1px;
-        }
-
-        .btn:focus,
-        .btn:active:focus,
-        .btn.active:focus {
-          outline: 0 none;
-        }
-
-        .btn-primary {
-          background: #aab2b4;
-          color: #ffffff;
-        }
-
-        .btn-primary:hover,
-        .btn-primary:focus,
-        .btn-primary:active,
-        .btn-primary.active,
-        .open > .dropdown-toggle.btn-primary {
-          background: #94b4be;
-        }
-
-        .btn-primary:active,
-        .btn-primary.active {
-          background: #007299;
-          box-shadow: none;
-        }
       `}</style>
     </>
   );
 }
-
 
 const Home = () => (
   <div className="container">
@@ -209,26 +283,10 @@ const Home = () => (
         content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       />
-      <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
-      />
-      <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"
-      />
-      <link
+      {/* <link
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
-      />
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/leaflet@1.4.0/dist/leaflet.css"
-      />
-      <link
-        rel="stylesheet"
-        href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"
-      />
+      /> */}
     </Head>
 
     <App />
