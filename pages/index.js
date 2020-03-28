@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from "react";
 import { Formik } from "formik";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -24,7 +24,7 @@ const AddressForm = (props) => {
   return (
     <>
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ address: props.initialAddress }}
         validate={values => {
           const errors = {};
           if (!values.address) {
@@ -196,9 +196,12 @@ const Summary = (props) => {
 
 const App = () => {
   const [address, setAddress] = useState('N Miller St, Rising Star, TX 76471');
+  const cleanAddress = useMemo(() => {
+    return address.trim();
+  }, [address])
 
   const { status, data: summaryData, error, isFetching } = useQuery(
-    address,
+    cleanAddress,
     getSummaryData
   );
 
@@ -206,7 +209,7 @@ const App = () => {
     <>
       <div className="container">
         <div id="title">Officially Reported Covid-19 Cases Near You</div>
-        <AddressForm setAddress={setAddress} />
+        <AddressForm setAddress={setAddress} initialAddress={cleanAddress} />
 
         {!isFetching ? (
           <Summary data={summaryData} />
@@ -215,7 +218,7 @@ const App = () => {
             Submitted! Due to high demand, this may take a few moments to load.
           </div>
         )}
-        <iframe src={getMapUrl(address)} id="map" frameBorder={0} />
+        <iframe src={getMapUrl(cleanAddress)} id="map" frameBorder={0} />
         <div style={{ float: "right" }}>
           data: <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
         </div>
