@@ -3,6 +3,7 @@ import Head from 'next/head'
 import React, { useState, useEffect } from 'react';
 import { Formik } from "formik";
 import axios from "axios";
+import { useQuery } from "react-query";
 
 // API Fetching
 const LION_BASE_URL = "https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev";
@@ -13,118 +14,65 @@ const getSummaryUrl = () => {
   return `${LION_BASE_URL}/lion_summary`;
 };
 
+const getSummaryData = async (address) => {
+  const { data } = await axios(getSummaryUrl(), { params: { address }, crossorigin: true });
+  return data;
+};
+
+
 const AddressForm = (props) => {
-  return <Formik
-    initialValues={{ email: "", password: "" }}
-    validate={values => {
-      const errors = {};
-      if (!values.address) {
-        errors.address = "Required";
-      }
-
-      return errors;
-    }}
-    onSubmit={(values, { setSubmitting }) => {
-      setSubmitting(true);
-      props.setAddress(values.address);
-      setTimeout(() => {
-        setSubmitting(false);
-      }, 2000)
-    }}
-  >
-    {({
-      values,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      isSubmitting
-    }) => (
-        <form onSubmit={handleSubmit} className="form-inline">
-          <div className="form-group mb-2">
-            <input
-              type="text"
-              name="address"
-              className="form-control"
-              placeholder="101 AnyStreet, AnyCity, TX, ZipCode"
-              style={{ width: "300px" }}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.address}
-            />
-          </div>
-          <div className="form-group mx-sm-3 mb-2"></div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={isSubmitting}
-          >
-            Submit
-        </button>
-          {isSubmitting && <span> Submitted! Tiny digital ninjas are working hard to show you covid data</span>}
-          {/* <button type="submit" className="btn btn-primary" onclick="getLocation()">
-        Try Automatic Geolocation
-      </button> */}
-        </form>
-      )}
-  </Formik>;
-}
-
-const Summary = (props) => {
-  const {
-    oneHourDeaths,
-    oneHourPositives,
-    texasDeaths,
-    texasPositives
-  } = props.data;
-
   return (
     <>
-      <div id="textDescription">
-        <div id="oneHourData">
-          There are at least{" "}
-          <strong>
-            <span id="oneHourCases"> {oneHourPositives}</span> confirmed cases
-        </strong>{" "}
-        and{" "}
-          <strong>
-            <span id="oneHourDeaths">{oneHourDeaths}</span> Deaths
-        </strong>{" "}
-        within about a 1-hour drive of you.
-      </div>
-        <div className="texasInfo">
-          Texas has at least{" "}
-          <strong>
-            <span id="texasCases">{texasPositives}</span> confirmed cases
-        </strong>{" "}
-        and{" "}
-          <strong>
-            <span id="texasDeaths">{texasDeaths}</span> Deaths
-        </strong>{" "}
-        so far.
-      </div>
-        <div className="texasInfo">
-          102,302 Americans have been infected.{" "}
-          <strong>
-            <a
-              style={{ color: "red" }}
-              href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validate={values => {
+          const errors = {};
+          if (!values.address) {
+            errors.address = "Required";
+          }
+
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          props.setAddress(values.address);
+          setTimeout(() => {
+            setSubmitting(false);
+          }, 2000);
+        }}
+      >
+        {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+          <form onSubmit={handleSubmit} className="form-inline">
+            <div className="form-group mb-2">
+              <input
+                type="text"
+                name="address"
+                className="form-control"
+                placeholder="101 AnyStreet, AnyCity, TX, ZipCode"
+                style={{ width: "300px" }}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.address}
+              />
+            </div>
+            <div className="form-group mx-sm-3 mb-2"></div>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isSubmitting}
             >
-              Please stay home. Stay safe.{" "}
-            </a>
-          </strong>
-        </div>
-        <div id="americanTotal">
-          <a href={"#"} style={{ float: "left" }}>
-            Watch a video about how this tool was built and why
-        </a>
-          <div style={{ float: "right" }}>
-            Updated: <span id="updatedMonth" />/<span id="updatedDay" /> at{" "}
-            <span id="updatedHour" /> CST
-        </div>
-        </div>
-      </div>
+              Submit
+            </button>
+            {/* <button type="submit" className="btn btn-primary" onclick="getLocation()">
+        Try Automatic Geolocation
+      </button> */}
+          </form>
+        )}
+      </Formik>
+
       <style jsx>{`
-      .form-inline {
+
+        .form-inline {
           margin-top: 1em;
           margin-bottom: 1em;
         }
@@ -160,24 +108,99 @@ const Summary = (props) => {
           background: #007299;
           box-shadow: none;
         }
-    `}</style>
+      `}</style>
+    </>
+  );
+}
+
+const Summary = (props) => {
+  const {
+    oneHourDeaths,
+    oneHourPositives,
+    texasDeaths,
+    texasPositives
+  } = props.data;
+
+  return (
+    <>
+      <div id="textDescription">
+        <div id="oneHourData">
+          There are at least{" "}
+          <strong>
+            <span id="oneHourCases"> {oneHourPositives}</span> confirmed cases
+          </strong>{" "}
+          and{" "}
+          <strong>
+            <span id="oneHourDeaths">{oneHourDeaths}</span> Deaths
+          </strong>{" "}
+          within about a 1-hour drive of you.
+        </div>
+        <div className="texasInfo">
+          Texas has at least{" "}
+          <strong>
+            <span id="texasCases">{texasPositives}</span> confirmed cases
+          </strong>{" "}
+          and{" "}
+          <strong>
+            <span id="texasDeaths">{texasDeaths}</span> Deaths
+          </strong>{" "}
+          so far.
+        </div>
+        <div className="texasInfo">
+          102,302 Americans have been infected.{" "}
+          <strong>
+            <a
+              style={{ color: "red" }}
+              href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
+            >
+              Please stay home. Stay safe.{" "}
+            </a>
+          </strong>
+        </div>
+        <div id="americanTotal">
+          <a href={"#"} style={{ float: "left" }}>
+            Watch a video about how this tool was built and why
+          </a>
+          <div style={{ float: "right" }}>
+            Updated: <span id="updatedMonth" />/<span id="updatedDay" /> at{" "}
+            <span id="updatedHour" /> CST
+          </div>
+        </div>
+      </div>
+      <style jsx>{`
+        #textDescription {
+          margin-top: 1em;
+        }
+
+        #oneHourData {
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 1.5em;
+          padding-top: 10px;
+        }
+
+        #americanTotal {
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 1em;
+          padding-top: 10px;
+        }
+
+        .texasInfo {
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 1.2em;
+          padding-top: 10px;
+        }
+      `}</style>
     </>
   );
 }
 
 const App = () => {
   const [address, setAddress] = useState('N Miller St, Rising Star, TX 76471');
-  const [summaryData, setSummaryData] = useState(null);
 
-  useEffect(() => {
-    async function fetchData() {
-      const url = getSummaryUrl();
-      const result = await axios(url, { params: { address }, crossorigin: true });
-      setSummaryData(result.data);
-    }
-    fetchData();
-  }, [address]);
-
+  const { status, data: summaryData, error, isFetching } = useQuery(
+    address,
+    getSummaryData
+  );
 
   return (
     <>
@@ -185,7 +208,14 @@ const App = () => {
         <div id="title">Officially Reported Covid-19 Cases Near You</div>
         <AddressForm setAddress={setAddress} />
 
-        {summaryData && <Summary data={summaryData} />}
+        {!isFetching ? (
+          <Summary data={summaryData} />
+        ) : (
+          <div>
+            Submitted! Tiny digital ninjas are working hard to show you COVID
+            data.
+          </div>
+        )}
         <iframe src={getMapUrl(address)} id="map" frameBorder={0} />
         <div style={{ float: "right" }}>
           data: <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
@@ -231,6 +261,7 @@ const App = () => {
           margin-right: auto;
           margin-bottom: 25px;
         }
+
         #title {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 2.5em;
@@ -238,31 +269,11 @@ const App = () => {
           padding-bottom: 0.7em;
           font-weight: 700;
         }
+
         .texasInfo {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.2em;
           padding-top: 10px;
-        }
-
-        #oneHourData {
-          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 1.5em;
-          padding-top: 10px;
-        }
-
-        #americanTotal {
-          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 1em;
-          padding-top: 10px;
-          /* padding-bottom: 1em; */
-        }
-
-        #textDescription {
-          margin-top: 1em;
-        }
-
-        #addressBox {
-          display: inline-block;
         }
       `}</style>
     </>
