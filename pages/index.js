@@ -88,51 +88,51 @@ const Summary = (props) => {
 
   return (
     <>
-    <div id="textDescription">
-      <div id="oneHourData">
-        There are at least{" "}
-        <strong>
-          <span id="oneHourCases"> {oneHourPositives}</span> confirmed cases
+      <div id="textDescription">
+        <div id="oneHourData">
+          There are at least{" "}
+          <strong>
+            <span id="oneHourCases"> {oneHourPositives}</span> confirmed cases
         </strong>{" "}
         and{" "}
-        <strong>
-          <span id="oneHourDeaths">{oneHourDeaths}</span> Deaths
+          <strong>
+            <span id="oneHourDeaths">{oneHourDeaths}</span> Deaths
         </strong>{" "}
         within about a 1-hour drive of you.
       </div>
-      <div className="texasInfo">
-        Texas has at least{" "}
-        <strong>
-          <span id="texasCases">{texasPositives}</span> confirmed cases
+        <div className="texasInfo">
+          Texas has at least{" "}
+          <strong>
+            <span id="texasCases">{texasPositives}</span> confirmed cases
         </strong>{" "}
         and{" "}
-        <strong>
-          <span id="texasDeaths">{texasDeaths}</span> Deaths
+          <strong>
+            <span id="texasDeaths">{texasDeaths}</span> Deaths
         </strong>{" "}
         so far.
       </div>
-      <div className="texasInfo">
-        102,302 Americans have been infected.{" "}
-        <strong>
-          <a
-            style={{ color: "red" }}
-            href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
-          >
-            Please stay home. Stay safe.{" "}
-          </a>
-        </strong>
-      </div>
-      <div id="americanTotal">
-        <a href style={{ float: "left" }}>
-          Watch a video about how this tool was built and why
+        <div className="texasInfo">
+          102,302 Americans have been infected.{" "}
+          <strong>
+            <a
+              style={{ color: "red" }}
+              href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
+            >
+              Please stay home. Stay safe.{" "}
+            </a>
+          </strong>
+        </div>
+        <div id="americanTotal">
+          <a href={"#"} style={{ float: "left" }}>
+            Watch a video about how this tool was built and why
         </a>
-        <div style={{ float: "right" }}>
-          Updated: <span id="updatedMonth" />/<span id="updatedDay" /> at{" "}
-          <span id="updatedHour" /> CST
+          <div style={{ float: "right" }}>
+            Updated: <span id="updatedMonth" />/<span id="updatedDay" /> at{" "}
+            <span id="updatedHour" /> CST
+        </div>
         </div>
       </div>
-    </div>
-    <style jsx>{`
+      <style jsx>{`
       .form-inline {
           margin-top: 1em;
           margin-bottom: 1em;
@@ -273,8 +273,6 @@ const App = () => {
         #addressBox {
           display: inline-block;
         }
-
-
       `}</style>
     </>
   );
@@ -283,19 +281,14 @@ const App = () => {
 const Home = () => (
   <div className="container">
     <Head>
-      <title>Create Next App</title>
+      <title>Covid Cases Near You (Texas)</title>
       <link rel="icon" href="/favicon.ico" />
       <meta
         name="viewport"
         content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       />
-      {/* <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
-      /> */}
     </Head>
-
     <App />
 
     <style jsx global>{`
