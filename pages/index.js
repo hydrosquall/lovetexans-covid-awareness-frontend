@@ -4,15 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Formik } from "formik";
 import axios from "axios";
 
-import ReactGA from "react-ga";
-
-const ANALYTICS_ID = "UA-134441849-4";
-if (window && window.location) {
-  ReactGA.initialize(ANALYTICS_ID);
-  ReactGA.pageview(window.location.pathname + window.location.search);
-
-}
-
 // API Fetching
 const LION_BASE_URL = "https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev";
 const getMapUrl = (address) => {
