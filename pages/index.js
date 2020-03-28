@@ -34,7 +34,6 @@ const AddressForm = (props) => {
       return errors;
     }}
     onSubmit={(values, { setSubmitting }) => {
-      console.log("submitting");
       setSubmitting(true);
       props.setAddress(values.address);
       setTimeout(() => {
@@ -70,7 +69,7 @@ const AddressForm = (props) => {
           >
             Submit
         </button>
-          {isSubmitting && <span> Submitted! </span>}
+          {isSubmitting && <span> Submitted! Tiny digital ninjas are working hard to show you covid data</span>}
           {/* <button type="submit" className="btn btn-primary" onclick="getLocation()">
         Try Automatic Geolocation
       </button> */}
