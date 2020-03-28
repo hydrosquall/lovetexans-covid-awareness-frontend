@@ -212,8 +212,7 @@ const App = () => {
           <Summary data={summaryData} />
         ) : (
           <div>
-            Submitted! Tiny digital ninjas are working hard to show you COVID
-            data.
+            Submitted! Due to high demand, this may take a few moments to load.
           </div>
         )}
         <iframe src={getMapUrl(address)} id="map" frameBorder={0} />
