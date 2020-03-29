@@ -5,6 +5,8 @@ import { Formik } from "formik";
 import axios from "axios";
 import { useQuery } from "react-query";
 
+import { Input } from "semantic-ui-react";
+
 // API Fetching
 const LION_BASE_URL = "https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev";
 const getMapUrl = (address) => {
@@ -43,70 +45,31 @@ const AddressForm = (props) => {
       >
         {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <form onSubmit={handleSubmit} className="form-inline">
-            <div className="form-group mb-2">
-              <input
+
+              <Input
+                action={{
+                  content: "Search Cases",
+                  onClick: handleSubmit,
+                  style: { fontSize: 16 }
+                }}
                 type="text"
                 name="address"
-                className="form-control"
-                placeholder="101 AnyStreet, AnyCity, TX, ZipCode"
-                style={{ width: "300px" }}
+                style={{ width: "700px", fontSize: 16 }}
+                placeholder="Type any Texan City or Address to find nearby COVID cases."
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.address}
+                disabled={isSubmitting}
               />
-            </div>
-            <div className="form-group mx-sm-3 mb-2"></div>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              Submit
-            </button>
-            {/* <button type="submit" className="btn btn-primary" onclick="getLocation()">
-        Try Automatic Geolocation
-      </button> */}
+
           </form>
         )}
       </Formik>
 
       <style jsx>{`
-
         .form-inline {
           margin-top: 1em;
           margin-bottom: 1em;
-        }
-
-        .btn {
-          padding: 10px 15px;
-          border: 0 none;
-          font-weight: 300;
-          letter-spacing: 1px;
-        }
-
-        .btn:focus,
-        .btn:active:focus,
-        .btn.active:focus {
-          outline: 0 none;
-        }
-
-        .btn-primary {
-          background: #aab2b4;
-          color: #ffffff;
-        }
-
-        .btn-primary:hover,
-        .btn-primary:focus,
-        .btn-primary:active,
-        .btn-primary.active,
-        .open > .dropdown-toggle.btn-primary {
-          background: #94b4be;
-        }
-
-        .btn-primary:active,
-        .btn-primary.active {
-          background: #007299;
-          box-shadow: none;
         }
       `}</style>
     </>
@@ -162,8 +125,7 @@ const Summary = (props) => {
             Watch a video about how this tool was built and why
           </a>
           <div style={{ float: "right" }}>
-            Updated: <span id="updatedMonth" />/<span id="updatedDay" /> at{" "}
-            <span id="updatedHour" /> CST
+            <span> Updated: March 28 at 12:00 PM </span> CST
           </div>
         </div>
       </div>
@@ -195,7 +157,7 @@ const Summary = (props) => {
 }
 
 const App = () => {
-  const [address, setAddress] = useState('N Miller St, Rising Star, TX 76471');
+  const [address, setAddress] = useState('');
   const cleanAddress = useMemo(() => {
     return address.trim();
   }, [address])
@@ -211,24 +173,28 @@ const App = () => {
         <div id="title">Officially Reported Covid-19 Cases Near You</div>
         <AddressForm setAddress={setAddress} initialAddress={cleanAddress} />
 
-        {!isFetching ? (
-          <Summary data={summaryData} />
-        ) : (
+        {!isFetching && summaryData && <Summary data={summaryData} />}
+        {isFetching && cleanAddress && (
           <div>
             Submitted! Due to high demand, this may take a few moments to load.
           </div>
         )}
+
         <iframe src={getMapUrl(cleanAddress)} id="map" frameBorder={0} />
-        <div style={{ float: "right" }}>
-          data: <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
-        </div>
-        <div style={{ float: "left" }}>
-          <img
-            src="F3_Logo small.png"
-            style={{ width: "50px", height: "10px" }}
-          />
-          Feedback?{" "}
-          <a href="mailto:alex@f3healthcare.com">Email the F3 Health Team</a>
+
+        <div style={{ marginTop: 20}}>
+          <div style={{ float: "right" }}>
+            data:{" "}
+            <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
+          </div>
+          <div style={{ float: "left"}}>
+            <img
+              src="f3_logo_small.png"
+              style={{ width: "20px", height: "20px" }}
+            />{" "}
+            Feedback?{" "}
+            <a href="mailto:alex@f3healthcare.com">Email the F3 Health Team</a>
+          </div>
         </div>
       </div>
       <div className="container">
@@ -238,7 +204,7 @@ const App = () => {
             style={{ color: "red" }}
             href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine"
           >
-            Social Distancing can save Texan's Lives
+            Social Distancing can save Texans' Lives
           </a>
         </div>
         <div className="texasInfo">
@@ -286,7 +252,7 @@ const Home = () => (
   <div className="container">
     <Head>
       <title>Covid Cases Near You (Texas)</title>
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/f3_logo_small.png" />
       <meta
         name="viewport"
         content="width=device-width,

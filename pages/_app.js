@@ -4,6 +4,7 @@ import App from "next/app";
 // Alex custom styles
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/css/bootstrap-theme.min.css";
+import "semantic-ui-css/semantic.min.css";
 
 import ReactGA from "react-ga";
 
