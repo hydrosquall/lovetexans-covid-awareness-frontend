@@ -256,7 +256,7 @@ const App = props => {
   );
 
   const { data: updateTimeData } = useQuery('dataLastUpdated', getDataLastUpdated);
-  console.log(updateTimeData);
+
   const shouldBeTall = isFetching && status === 'loading' || summaryData !== undefined;
   const animatedProps = useSpring({ minHeight: shouldBeTall ? 180 : 50 });
 
@@ -312,7 +312,7 @@ const App = props => {
       <div className="container">
         <div style={{ marginTop: 10 }}>
           <List horizontal style={{ display: "flex", alignItems: "center" }}>
-            <List.Item>
+            <List.Item key={'clipboardKey'}>
               <Button
                 icon
                 labelPosition="left"
@@ -328,8 +328,8 @@ const App = props => {
               ([ButtonComponent, IconComponent, extraProps = {}], i) => {
                 const url = "https://www.lovetexans.org";
                 return (
-                  <List.Item>
-                    <ButtonComponent url={url} key={i} {...extraProps}>
+                  <List.Item key={i}>
+                    <ButtonComponent url={url} {...extraProps}>
                       <IconComponent size={32} round={true}></IconComponent>
                     </ButtonComponent>
                   </List.Item>
