@@ -230,11 +230,12 @@ const Summary = props => {
             Protect Texans. Stay home. Stay safe.
           </a>
         </p>
-        <div id="americanTotal" style={{ paddingBottom: 20, marginTop: 10 }}>
-          <a href={"#"} style={{ float: "left" }}>
+        <div id="videoBlock">
+          <a href={"#"} className="video-link">
             Watch a video about how this tool was built and why
           </a>
-          <div style={{ float: "right" }}>
+
+          <div className="dataSourceLink">
             <span className="updateDate"> Updated: {updateTimeMessage} </span>
           </div>
         </div>
@@ -249,9 +250,17 @@ const Summary = props => {
           font-size: 1.5em;
         }
 
-        #americanTotal {
+        #videoBlock {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1em;
+          height: 25px;
+          margin-top: 10px;
+        }
+
+        @media (max-width: 501px) {
+          #videoBlock {
+            height: 30px;
+          }
         }
 
         .texasInfo {
@@ -270,6 +279,25 @@ const Summary = props => {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1em;
           color: #333;
+        }
+
+        .videoLink {
+          float: left;
+        }
+
+        .dataSourceLink {
+          float: right;
+        }
+        @media (max-width: 501px) {
+          .videoLink {
+            margin-top: 15px;
+          }
+
+          .dataSourceLink {
+            float: left;
+            padding-top: 5px;
+            height: 20px;
+          }
         }
       `}</style>
     </>
@@ -322,7 +350,7 @@ const App = props => {
 
   return (
     <>
-      <div className="container">
+      <div className="page-container">
         <Header
           as="h1"
           style={{
@@ -389,7 +417,7 @@ const App = props => {
           </div>
         </div>
       </div>
-      <div className="container">
+      <div className="page-container">
         <div>
           <List horizontal style={{ display: "flex", alignItems: "center" }}>
             <List.Item key={"clipboardKey"}>
@@ -419,7 +447,7 @@ const App = props => {
           </List>
         </div>
       </div>
-      <div className="container">
+      <div className="page-container">
         <p className="texasInfo">
           Learn more about how{" "}
           <a
@@ -455,11 +483,18 @@ const App = props => {
       </div>
 
       <style jsx>{`
-        .container {
-          width: 85%;
+        .page-container {
+          width: 80%;
           margin-left: auto;
           margin-right: auto;
-          margin-bottom: 15px;
+        }
+        @media (max-width: 501px) {
+          .page-container {
+            width: 95% !important;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 15px;
+          }
         }
 
         .texasInfo {
@@ -484,7 +519,7 @@ const App = props => {
 };
 
 const Home = props => (
-  <div className="container">
+  <div className="page-container">
     <Head>
       <title>Love Texans: Stay Home</title>
       <link rel="icon" href="/favicon.ico" />
@@ -507,6 +542,19 @@ const Home = props => (
       }
       * {
         box-sizing: border-box;
+      }
+      .page-container {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      @media (max-width: 501px) {
+        .page-container {
+          width: 99% !important;
+          margin-left: auto;
+          margin-right: auto;
+          margin-bottom: 15px;
+        }
       }
     `}</style>
   </div>
