@@ -168,7 +168,7 @@ const Summary = props => {
               and <span id="oneHourDeaths">{oneHourDeaths} Deaths </span>
             </>
           )}{" "}
-          are within a 1-hour drive of you.
+          are within roughly 1-hour drive of you.
         </p>
         <p className="texasInfo">
           Texas has had at least <span id="texasCases">{texasPositives}</span>{" "}
@@ -181,7 +181,7 @@ const Summary = props => {
             href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
             target="_blank"
           >
-            Please stay home. Stay safe.
+            Protect Texans. Stay home. Stay safe.
           </a>
         </p>
         <div id="americanTotal" style={{ paddingBottom: 20, marginTop: 10 }}>
@@ -189,7 +189,7 @@ const Summary = props => {
             Watch a video about how this tool was built and why
           </a>
           <div style={{ float: "right" }}>
-            <span> Updated: {updateTimeMessage} </span>
+            <span className="updateDate"> Updated: {updateTimeMessage} </span>
           </div>
         </div>
       </div>
@@ -218,6 +218,12 @@ const Summary = props => {
         }
         #textDescription span {
           font-weight: bold;
+        }
+
+        span.updateDate {
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 1em;
+          color: #333;
         }
       `}</style>
     </>
@@ -312,7 +318,7 @@ const App = props => {
       <div className="container">
         <div style={{ marginTop: 10 }}>
           <List horizontal style={{ display: "flex", alignItems: "center" }}>
-            <List.Item key={'clipboardKey'}>
+            <List.Item key={"clipboardKey"}>
               <Button
                 icon
                 labelPosition="left"
@@ -375,7 +381,14 @@ const App = props => {
 
         <div style={{ marginTop: 15, width: "100%" }} className="attributions">
           <p style={{ float: "left" }}>
-            Built with care by Alex Rich and{" "}
+            Built with care by{" "}
+            <a
+              href="https://www.linkedin.com/in/alex-rich-940651a8/"
+              target="_blank"
+            >
+              Alex Rich
+            </a>{" "}
+            and{" "}
             <a href="https://www.serendipidata.com" target="_blank">
               Cameron Yick
             </a>
@@ -415,7 +428,7 @@ const App = props => {
 const Home = props => (
   <div className="container">
     <Head>
-      <title>Covid Cases Near You (Texas)</title>
+      <title>Love Texans: Stay Home</title>
       <link rel="icon" href="/favicon.ico" />
       <meta
         name="viewport"
