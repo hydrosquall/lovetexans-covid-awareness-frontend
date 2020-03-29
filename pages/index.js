@@ -1,5 +1,6 @@
 import Head from 'next/head';
 
+import { useRouter } from "next/router";
 import React, { useState, useCallback, useMemo } from "react";
 import { Formik } from "formik";
 import axios from "axios";
@@ -28,7 +29,7 @@ const getSummaryUrl = () => {
 };
 
 const getSummaryData = async (address) => {
-  const { data } = await axios(getSummaryUrl(), { params: { address }, crossorigin: true });
+  const { data } = await axios(getSummaryUrl(), { params: { address }});
   return data;
 };
 
@@ -170,11 +171,11 @@ const Summary = (props) => {
 const App = () => {
 
   const appState = useMemo(() => {
-    return queryState();
+    return queryState({ }, { useSearch: true });
   }, []);
-
+  const router = useRouter();
   const [address, setAddressRaw] = useState(() => {
-    const path = process.browser ? window.location.hash.split("#?")[1] : "";
+    const path =  router.asPath.split("/?")[1];
     const params =  qs.parse(path);
     return titleCase(params.address || "")
   });
@@ -235,7 +236,7 @@ const App = () => {
           </div>
         </Segment>
 
-        {process.browser && <iframe
+         <iframe
           src={getMapUrl(normalizedAddress)}
           frameBorder={0}
           style={{
@@ -243,7 +244,7 @@ const App = () => {
             height: '420px',
             position: 'relative'
           }}
-        ></iframe>}
+        ></iframe>
 
         <div style={{ marginTop: 10 }}>
           <div style={{ float: "right" }}>
