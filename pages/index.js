@@ -158,7 +158,12 @@ const App = () => {
   const [address, setAddress] = useState('');
   const cleanAddress = useMemo(() => {
     // Normalization to help with cache busting
-    return address.trim().toLowerCase();
+    // Normalize whitespace
+    return address
+      .trim()
+      .split(/\s+/)
+      .join(" ")
+      .toLowerCase();
   }, [address])
 
   const { status, data: summaryData, error, isFetching } = useQuery(
