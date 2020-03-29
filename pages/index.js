@@ -45,7 +45,6 @@ const AddressForm = (props) => {
       >
         {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <form onSubmit={handleSubmit} className="form-inline">
-
               <Input
                 action={{
                   content: "Search Cases",
@@ -55,13 +54,12 @@ const AddressForm = (props) => {
                 type="text"
                 name="address"
                 style={{ width: "700px", fontSize: 16 }}
-                placeholder="Type any Texan City or Address to find nearby COVID cases."
+                placeholder="Type any Texan City or Address to find nearby COVID-19 cases."
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.address}
                 disabled={isSubmitting}
               />
-
           </form>
         )}
       </Formik>
@@ -159,7 +157,8 @@ const Summary = (props) => {
 const App = () => {
   const [address, setAddress] = useState('');
   const cleanAddress = useMemo(() => {
-    return address.trim();
+    // Normalization to help with cache busting
+    return address.trim().toLowerCase();
   }, [address])
 
   const { status, data: summaryData, error, isFetching } = useQuery(
