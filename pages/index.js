@@ -370,7 +370,7 @@ const App = props => {
 
   return (
     <>
-      <div className="page-container">
+      <div className="container">
         <Header
           as="h1"
           style={{
@@ -463,7 +463,7 @@ const App = props => {
           </div>
         </div>
       </div>
-      <div className="page-container">
+      <div className="container">
         <div>
           <List horizontal style={{ display: "flex", alignItems: "center" }}>
             <List.Item key={"clipboardKey"}>
@@ -493,7 +493,7 @@ const App = props => {
           </List>
         </div>
       </div>
-      <div className="page-container">
+      <div className="container">
         <p className="texasInfo">
           Learn more about how{" "}
           <a
@@ -537,7 +537,7 @@ const App = props => {
       </div>
 
       <style jsx>{`
-        .page-container {
+        .container {
           width: 80%;
           margin-left: auto;
           margin-right: auto;
@@ -545,7 +545,7 @@ const App = props => {
         }
 
         @media (max-width: 501px) {
-          .page-container {
+          .container {
             width: 95% !important;
             margin-left: auto;
             margin-right: auto;
@@ -574,7 +574,7 @@ const App = props => {
 };
 
 const Home = props => (
-  <div className="page-container">
+  <div className="container">
     <Head>
       <title>Love Texans: Stay Home</title>
       <link rel="icon" href="/favicon.ico" />
@@ -598,14 +598,14 @@ const Home = props => (
       * {
         box-sizing: border-box;
       }
-      .page-container {
+      .container {
         width: 80%;
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 15px;
       }
       @media (max-width: 501px) {
-        .page-container {
+        .container {
           width: 99% !important;
           margin-left: auto;
           margin-right: auto;
