@@ -421,23 +421,42 @@ const App = props => {
           }}
         ></iframe>
         <div style={{ height: 25, marginTop: 10 }}>
-          <div style={{ float: "left" }}>
+          <div
+            style={{ float: "left", display: "flex", alignContent: "center" }}
+          >
             <img
               src="f3_logo_small.png"
-              style={{ width: "20px", height: "20px" }}
+              style={{ width: "20px", height: "20px", marginRight: "5px" }}
             />{" "}
-            Feedback?{" "}
-            <a href="mailto:alex@f3healthcare.com">Email the F3 Health Team</a>
+            Feedback?{"  "}
+            <a
+              href="mailto:alex@f3healthcare.com"
+              style={{ marginLeft: "5px" }}
+            >
+              Email the F3 Health Team
+            </a>
           </div>
-          <div style={{ float: "right" }}>
+          <div
+            style={{
+              float: "right",
+              display: "flex",
+              alignContent: "center",
+              margin: "0 10px"
+            }}
+          >
             data:{" "}
-            <a href="https://www.dshs.texas.gov/coronavirus/" target="_blank">
+            <a
+              href="https://www.dshs.texas.gov/coronavirus/"
+              target="_blank"
+              style={{ marginLeft: "5px" }}
+            >
               Texas DSHS
             </a>
             ,{" "}
             <a
               href="https://github.com/CSSEGISandData/COVID-19"
               target="_blank"
+              style={{ marginLeft: "5px" }}
             >
               Johns Hopkins CSSE
             </a>
