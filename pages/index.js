@@ -293,31 +293,20 @@ const App = props => {
             position: "relative"
           }}
         ></iframe>
-
-        <div style={{ marginTop: 10 }}>
-          <div style={{ float: "right" }}>
-            data:{" "}
-            <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
-          </div>
-          <div style={{ float: "left" }}>
-            <img
-              src="f3_logo_small.png"
-              style={{ width: "20px", height: "20px" }}
-            />{" "}
-            Feedback?{" "}
-            <a href="mailto:alex@f3healthcare.com">Email the F3 Health Team</a>
-          </div>
-        </div>
       </div>
       <div className="container">
         <div className="texasInfo">
-          Learn more about how
-          <a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine" target="_blank" className="alert">
-          Social Distancing can save Texans' Lives
+          Learn more about how{" "}
+          <a
+            href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine"
+            target="_blank"
+            className="alertLink"
+          >
+            Social Distancing can save Texans' Lives
           </a>
         </div>
         <div className="texasInfo">
-          Look at the data for the rest of the state on the{" "}
+          View data for the rest of the state on the{" "}
           <a href="https://txdshs.maps.arcgis.com/apps/opsdashboard/index.html#/ed483ecd702b4298ab01e8b9cafc8b83">
             Texas DSHS Covid Dashboard
           </a>
@@ -350,6 +339,26 @@ const App = props => {
             )}
           </List>
         </div>
+        <div style={{ marginTop: 20, height: 20 }}>
+          <div style={{ float: "left" }}>
+            <img
+              src="f3_logo_small.png"
+              style={{ width: "20px", height: "20px" }}
+            />{" "}
+            Feedback?{" "}
+            <a href="mailto:alex@f3healthcare.com">Email the F3 Health Team</a>
+          </div>
+          <div style={{ float: "right" }}>
+            data:{" "}
+            <a href="https://www.dshs.texas.gov/coronavirus/" target="_blank">Texas DSHS</a>
+          </div>
+        </div>
+        <div style={{ marginTop: 15 }}>
+          <p style={{ float: "left" }}>
+            Built with care by Alex Rich and{" "}
+            <a href="https://www.serendipidata.com" target="_blank">Cameron Yick</a>
+          </p>
+        </div>
       </div>
       <style jsx>{`
         .container {
@@ -365,8 +374,8 @@ const App = props => {
           padding-top: 10px;
         }
 
-        .texasInfo a.alert {
-          color: #e53935
+        .texasInfo a.alertLink {
+          color: #e53935;
         }
       `}</style>
     </>
@@ -403,7 +412,6 @@ const Home = props => (
 );
 
 Home.getInitialProps = ({ query }) => {
-  console.log(query);
   return { query };
 };
 
