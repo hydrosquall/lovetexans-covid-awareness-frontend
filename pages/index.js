@@ -1,11 +1,16 @@
 import Head from 'next/head'
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Formik } from "formik";
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import { Input, Segment } from "semantic-ui-react";
+import { Input, Segment, Button } from "semantic-ui-react";
+import queryState from "query-state";
+import { titleCase } from "title-case";
+import copy from "copy-to-clipboard";
+
+
 // API Fetching
 const LION_BASE_URL = "https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev";
 const getMapUrl = (address) => {
@@ -57,8 +62,7 @@ const AddressForm = (props) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.address}
-                disabled={isSubmitting}
-                loading={props.isLoading}
+                loading={Boolean(props.isLoading)}
                 iconPosition="left"
                 icon='search'
               />
@@ -157,8 +161,20 @@ const Summary = (props) => {
 }
 
 const App = () => {
-  const [address, setAddress] = useState('');
-  const cleanAddress = useMemo(() => {
+
+  const appState = useMemo(() => {
+    return queryState();
+  }, []);
+
+  // Eventual listener
+  const [address, setAddressRaw] = useState( titleCase(appState.get("address") || "")
+  );
+  const setAddress = useCallback((address) => {
+    appState.set("address", address);
+    setAddressRaw(address);
+  }, [setAddressRaw]);
+
+  const normalizedAddress = useMemo(() => {
     // Normalization to help with cache busting
     // Normalize whitespace
     return address
@@ -169,7 +185,7 @@ const App = () => {
   }, [address])
 
   const { status, data: summaryData, error, isFetching } = useQuery(
-    cleanAddress,
+    normalizedAddress,
     getSummaryData
   );
 
@@ -178,20 +194,20 @@ const App = () => {
       <div className="container">
         <div id="title">Officially Reported Covid-19 Cases Near You</div>
 
-        {cleanAddress === "" && (
+        {normalizedAddress === "" && (
           <Segment style={{ fontSize: 15 }}>
             <p>
               Enter any Texan City or Address to find nearby COVID-19 cases.
             </p>
           </Segment>
         )}
-        <div style={{ minHeight: 80 }}>
+        <div style={{ minHeight: 130 }}>
           <AddressForm
             setAddress={setAddress}
-            initialAddress={cleanAddress}
-            isLoading={cleanAddress && isFetching}
+            initialAddress={titleCase(address.toLowerCase())}
+            isLoading={normalizedAddress && isFetching}
           />
-          {isFetching && cleanAddress && (
+          {isFetching && normalizedAddress && (
             <div>
               Submitted! Due to high demand, this may take a few moments to
               load.
@@ -200,8 +216,8 @@ const App = () => {
           {!isFetching && summaryData && <Summary data={summaryData} />}
         </div>
 
-        <iframe src={getMapUrl(cleanAddress)} id="map" frameBorder={0} />
-        <div style={{ marginTop: 20 }}>
+        <iframe src={getMapUrl(normalizedAddress)} id="map" frameBorder={0} />
+        <div style={{ marginTop: 10 }}>
           <div style={{ float: "right" }}>
             data:{" "}
             <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
@@ -231,6 +247,12 @@ const App = () => {
           <a href="https://txdshs.maps.arcgis.com/apps/opsdashboard/index.html#/ed483ecd702b4298ab01e8b9cafc8b83">
             Texas DSHS Covid Dashboard
           </a>
+        </div>
+        <div style={{ paddingTop: 15}}>
+          <Button onClick={() => {
+            copy(window.location);
+          }}>Copy page link to clipboard</Button>
+          {/* <span>{process.browser && window.location}</span> */}
         </div>
       </div>
       <style jsx>{`
