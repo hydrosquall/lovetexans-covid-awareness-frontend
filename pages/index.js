@@ -1,14 +1,63 @@
-import Head from 'next/head';
-
-import React, { useState, useCallback, useMemo } from "react";
-import { Formik } from "formik";
 import axios from "axios";
-import { useQuery } from "react-query";
-
-import { Input, Segment, Button, Header } from "semantic-ui-react";
-import queryState from "query-state";
-import { titleCase } from "title-case";
 import copy from "copy-to-clipboard";
+import { Formik } from "formik";
+import Head from "next/head";
+import queryState from "query-state";
+import React, { useCallback, useMemo, useState } from "react";
+import { useQuery } from "react-query";
+import {
+  EmailIcon,
+  EmailShareButton,
+  FacebookIcon,
+  FacebookShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+  PocketIcon,
+  PocketShareButton,
+  RedditIcon,
+  RedditShareButton,
+  TelegramIcon,
+  TelegramShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+  WhatsappIcon,
+  WhatsappShareButton
+} from "react-share";
+import { Button, Header, Icon, Input, List, Segment } from "semantic-ui-react";
+import { titleCase } from "title-case";
+
+//github.com/nygardk/react-share#share-button-props
+const BUTTON_TITLE = "Officially Reported COVID-19 Cases in Texas: Map";
+const BUTTONS = [
+  [EmailShareButton, EmailIcon, { subject: BUTTON_TITLE }],
+  [
+    TwitterShareButton,
+    TwitterIcon,
+    { hashtags: ["covid19", "socialdistancing"], title: BUTTON_TITLE }
+  ],
+  [
+    FacebookShareButton,
+    FacebookIcon,
+    {
+      quote:
+        "Texas friends: See how many COVID cases are within driving distance."
+    }
+  ],
+  [
+    LinkedinShareButton,
+    LinkedinIcon,
+    {
+      summary:
+        "Texas friends: See how many COVID cases are within driving distance.",
+      source: "https://www.f3healthcare.com/",
+      title: BUTTON_TITLE
+    }
+  ],
+  [RedditShareButton, RedditIcon, { title: BUTTON_TITLE }],
+  [TelegramShareButton, TelegramIcon, { title: BUTTON_TITLE }],
+  [PocketShareButton, PocketIcon, { title: BUTTON_TITLE }],
+  [WhatsappShareButton, WhatsappIcon, { title: BUTTON_TITLE }]
+];
 
 // API Fetching
 // const LAMBDA_ID = "cvro944efg";
@@ -19,19 +68,19 @@ const CACHED_URL = `https://${CLOUDFRONT_ID}.cloudfront.net`;
 const USE_CACHE = true;
 const LION_BASE_URL = USE_CACHE ? CACHED_URL : LIVE_URL;
 
-const getMapUrl = (address) => {
-  return `${LION_BASE_URL}/lion_map?address=${encodeURIComponent(address)}`
-}
+const getMapUrl = address => {
+  return `${LION_BASE_URL}/lion_map?address=${encodeURIComponent(address)}`;
+};
 const getSummaryUrl = () => {
   return `${LION_BASE_URL}/lion_summary`;
 };
 
-const getSummaryData = async (address) => {
-  const { data } = await axios(getSummaryUrl(), { params: { address }});
+const getSummaryData = async address => {
+  const { data } = await axios(getSummaryUrl(), { params: { address } });
   return data;
 };
 
-const AddressForm = (props) => {
+const AddressForm = props => {
   return (
     <>
       <Formik
@@ -64,13 +113,15 @@ const AddressForm = (props) => {
               name="address"
               fluid={true}
               style={{ fontSize: 16 }}
-              placeholder={"Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"}
+              placeholder={
+                "Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"
+              }
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.address}
               loading={Boolean(props.isLoading)}
               iconPosition="left"
-              icon='search'
+              icon="search"
             />
           </form>
         )}
@@ -83,9 +134,9 @@ const AddressForm = (props) => {
       `}</style>
     </>
   );
-}
+};
 
-const Summary = (props) => {
+const Summary = props => {
   const {
     oneHourDeaths,
     oneHourPositives,
@@ -164,22 +215,24 @@ const Summary = (props) => {
       `}</style>
     </>
   );
-}
+};
 
-const App = (props) => {
-
+const App = props => {
   const appState = useMemo(() => {
-    return queryState({ }, { useSearch: true }); // search instead of hash so that servers get it
+    return queryState({}, { useSearch: true }); // search instead of hash so that servers get it
   }, []);
 
   const [address, setAddressRaw] = useState(() => {
-    return titleCase(props.queryParams.address || "")
+    return titleCase(props.queryParams.address || "");
   });
 
-  const setAddress = useCallback((address) => {
-    appState.set("address", address);
-    setAddressRaw(address);
-  }, [setAddressRaw]);
+  const setAddress = useCallback(
+    address => {
+      appState.set("address", address);
+      setAddressRaw(address);
+    },
+    [setAddressRaw]
+  );
 
   const normalizedAddress = useMemo(() => {
     // Normalization to help with cache busting
@@ -210,13 +263,13 @@ const App = (props) => {
         >
           Officially Reported Covid-19 Cases Near You
         </Header>
-        <Segment style={{ fontSize: 15 }}>
+        <Segment style={{ fontSize: 16 }}>
           {address === "" && (
             <p>
               Enter any Texan City or Address to find nearby COVID-19 cases.
             </p>
           )}
-          <div style={{ minHeight: 130 }}>
+          <div>
             <AddressForm
               setAddress={setAddress}
               initialAddress={titleCase(address.toLowerCase())}
@@ -275,12 +328,30 @@ const App = (props) => {
         </div>
         <div style={{ paddingTop: 15 }}>
           <Button
+            icon
+            labelPosition="left"
             onClick={() => {
               copy(window.location);
             }}
           >
-            To SHARE this page, click me to copy this link to your clipboard
+            <Icon name="copy"></Icon>
+            Click to copy this page link to your clipboard
           </Button>
+        </div>
+        <div style={{ marginTop: 10 }}>
+          <List horizontal>
+            {BUTTONS.map(([ButtonComponent, IconComponent, extraProps = {}], i) => {
+              const url = "https://www.lovetexans.org";
+              const title = "Daily updates of Covid-19 cases in counties near you";
+              return (
+                <List.Item>
+                  <ButtonComponent url={url} key={i} {...extraProps}>
+                    <IconComponent size={32} round={true}></IconComponent>
+                  </ButtonComponent>
+                </List.Item>
+              );
+            })}
+          </List>
         </div>
       </div>
       <style jsx>{`
@@ -299,9 +370,9 @@ const App = (props) => {
       `}</style>
     </>
   );
-}
+};
 
-const Home = (props) => (
+const Home = props => (
   <div className="container">
     <Head>
       <title>Covid Cases Near You (Texas)</title>
@@ -312,7 +383,7 @@ const Home = (props) => (
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       />
     </Head>
-    <App queryParams={props.query}/>
+    <App queryParams={props.query} />
     <style jsx global>{`
       html,
       body {
