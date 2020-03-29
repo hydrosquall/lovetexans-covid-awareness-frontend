@@ -37,21 +37,24 @@ const thousandFormatter = format(",");
 
 //github.com/nygardk/react-share#share-button-props
 // const LAST_UPDATED = "March 28 at 8:00 PM";
-const BUTTON_TITLE = "Officially Reported COVID-19 Cases in Texas: Map";
+const BUTTON_TITLE = "COVID-19 Near You in Texas: Map";
 const ALERT_RED = '#e53935';
 const BUTTONS = [
   [EmailShareButton, EmailIcon, { subject: BUTTON_TITLE }],
   [
     TwitterShareButton,
     TwitterIcon,
-    { hashtags: ["covid19", "socialdistancing", "datavis", "publichealth"], title: BUTTON_TITLE }
+    {
+      hashtags: ["COVID19", "FlattenTheCurve", "dataviz", "publichealth"],
+      title: BUTTON_TITLE
+    }
   ],
   [
     LinkedinShareButton,
     LinkedinIcon,
     {
       summary:
-        "Texas friends: See how many COVID cases are within driving distance.",
+        "Input your address. See the Covid-19 around you. Protect Texans by practicing physical distancing.",
       source: "https://www.f3healthcare.com/",
       title: BUTTON_TITLE
     }
@@ -61,7 +64,7 @@ const BUTTONS = [
     FacebookIcon,
     {
       quote:
-        "Texas friends: See how many COVID cases are within driving distance."
+        "Input your address. See the Covid-19 around you. Protect Texans by practicing physical distancing."
     }
   ],
   [RedditShareButton, RedditIcon, { title: BUTTON_TITLE }],
@@ -604,19 +607,19 @@ const Home = props => (
           name: "Cameron Yick"
         },
         description:
-          "View a map of COVID-19 cases within driving distance of you using public data"
+          "View COVID-19 cases within driving distance using public data"
       }}
       facebook={{
         title: "LoveTexans: Stay Home",
         description:
-          "View a map of COVID-19 cases within driving distance of you using public data",
+          "View COVID-19 cases within driving distance using public data",
         image: "https://lovetexans.org/lovetexans_card.png"
       }}
       twitter={{
         twitterUser: "@hydrosquall",
         title: "LoveTexans: Stay Home",
         description:
-          "View a map of COVID-19 cases within driving distance of you using public data",
+          "View COVID-19 cases within driving distance using public data",
         image: "https://lovetexans.org/lovetexans_card.png"
       }}
     />
