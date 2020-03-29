@@ -3,7 +3,7 @@ import copy from "copy-to-clipboard";
 import { Formik } from "formik";
 import Head from "next/head";
 import queryState from "query-state";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import {
   EmailIcon,
@@ -26,22 +26,18 @@ import {
 import { Button, Header, Icon, Input, List, Segment } from "semantic-ui-react";
 import { titleCase } from "title-case";
 
+import { useSpring, animated } from "react-spring";
+
 //github.com/nygardk/react-share#share-button-props
+const LAST_UPDATED = "March 28 at 8:00 PM";
 const BUTTON_TITLE = "Officially Reported COVID-19 Cases in Texas: Map";
+const ALERT_RED = '#e53935';
 const BUTTONS = [
   [EmailShareButton, EmailIcon, { subject: BUTTON_TITLE }],
   [
     TwitterShareButton,
     TwitterIcon,
     { hashtags: ["covid19", "socialdistancing"], title: BUTTON_TITLE }
-  ],
-  [
-    FacebookShareButton,
-    FacebookIcon,
-    {
-      quote:
-        "Texas friends: See how many COVID cases are within driving distance."
-    }
   ],
   [
     LinkedinShareButton,
@@ -51,6 +47,14 @@ const BUTTONS = [
         "Texas friends: See how many COVID cases are within driving distance.",
       source: "https://www.f3healthcare.com/",
       title: BUTTON_TITLE
+    }
+  ],
+  [
+    FacebookShareButton,
+    FacebookIcon,
+    {
+      quote:
+        "Texas friends: See how many COVID cases are within driving distance."
     }
   ],
   [RedditShareButton, RedditIcon, { title: BUTTON_TITLE }],
@@ -147,9 +151,12 @@ const Summary = props => {
   return (
     <>
       <div id="textDescription">
-        <div id="oneHourData">
+        <p id="oneHourData">
           Over{" "}
-          <span id="oneHourCases"> {oneHourPositives} confirmed cases</span>
+          <span id="oneHourCases">
+            {" "}
+            {oneHourPositives} confirmed cases
+          </span>
           {oneHourDeaths > 0 && (
             <>
               {" "}
@@ -157,13 +164,13 @@ const Summary = props => {
             </>
           )}{" "}
           are within a 1-hour drive of you.
-        </div>
-        <div className="texasInfo">
-          Texas has at least <span id="texasCases">{texasPositives}</span>{" "}
+        </p>
+        <p className="texasInfo">
+          Texas has had at least <span id="texasCases">{texasPositives}</span>{" "}
           confirmed cases and <span id="texasDeaths">{texasDeaths}</span> Deaths{" "}
           so far.
-        </div>
-        <div className="texasInfo">
+        </p>
+        <p className="texasInfo">
           102,302 Americans have been infected.{" "}
           <a
             href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
@@ -171,42 +178,39 @@ const Summary = props => {
           >
             Please stay home. Stay safe.
           </a>
-        </div>
-        <div id="americanTotal" style={{ paddingBottom: 15 }}>
+        </p>
+        <p id="americanTotal" style={{ paddingBottom: 20 }}>
           <a href={"#"} style={{ float: "left" }}>
             Watch a video about how this tool was built and why
           </a>
           <div style={{ float: "right" }}>
-            <span> Updated: March 28 at 8:00 PM </span> CST
+            <span> Updated: {LAST_UPDATED} </span> CST
           </div>
-        </div>
+        </p>
       </div>
       <style jsx>{`
-        #textDescription {
-          margin-top: 1em;
+
+        #textDescription p {
+          margin: 8px 0 0;
         }
 
         #oneHourData {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.5em;
-          padding-top: 10px;
-          padding-bottom: 5px;
         }
 
         #americanTotal {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1em;
-          padding-top: 10px;
         }
 
         .texasInfo {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.2em;
-          padding-top: 10px;
         }
 
         .texasInfo a {
-          color: #e53935;
+          color: ${ALERT_RED};
         }
         #textDescription span {
           font-weight: bold;
@@ -233,9 +237,10 @@ const App = props => {
     [setAddressRaw]
   );
 
+
+
   const normalizedAddress = useMemo(() => {
-    // Normalization to help with cache busting
-    // Normalize whitespace
+    // TODO... remove special characters like commas?
     return address
       .trim()
       .split(/\s+/)
@@ -247,6 +252,9 @@ const App = props => {
     normalizedAddress,
     getSummaryData
   );
+
+  const shouldBeTall = isFetching && status === 'loading' || summaryData !== undefined;
+  const animatedProps = useSpring({ minHeight: shouldBeTall ? 180 : 50 });
 
   return (
     <>
@@ -262,13 +270,16 @@ const App = props => {
         >
           Officially Reported Covid-19 Cases Near You
         </Header>
+
         <Segment style={{ fontSize: 16 }}>
+          {/* <AnimateHeight duration={200} height={segmentHeight}> */}
+
           {address === "" && (
             <p>
               Enter any Texan City or Address to find nearby COVID-19 cases.
             </p>
           )}
-          <div>
+          <animated.div style={animatedProps}>
             <AddressForm
               setAddress={setAddress}
               initialAddress={titleCase(address.toLowerCase())}
@@ -281,7 +292,8 @@ const App = props => {
               </div>
             )}
             {!isFetching && summaryData && <Summary data={summaryData} />}
-          </div>
+          </animated.div>
+          {/* </AnimateHeight> */}
         </Segment>
 
         <iframe
@@ -295,7 +307,7 @@ const App = props => {
         ></iframe>
       </div>
       <div className="container">
-        <div className="texasInfo">
+        <p className="texasInfo">
           Learn more about how{" "}
           <a
             href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine"
@@ -304,13 +316,13 @@ const App = props => {
           >
             Social Distancing can save Texans' Lives
           </a>
-        </div>
-        <div className="texasInfo">
+        </p>
+        <p className="texasInfo">
           View data for the rest of the state on the{" "}
           <a href="https://txdshs.maps.arcgis.com/apps/opsdashboard/index.html#/ed483ecd702b4298ab01e8b9cafc8b83">
             Texas DSHS Covid Dashboard
           </a>
-        </div>
+        </p>
         <div style={{ marginTop: 15 }}>
           <List horizontal style={{ display: "flex", alignItems: "center" }}>
             <List.Item>
@@ -350,13 +362,17 @@ const App = props => {
           </div>
           <div style={{ float: "right" }}>
             data:{" "}
-            <a href="https://www.dshs.texas.gov/coronavirus/" target="_blank">Texas DSHS</a>
+            <a href="https://www.dshs.texas.gov/coronavirus/" target="_blank">
+              Texas DSHS
+            </a>
           </div>
         </div>
         <div style={{ marginTop: 15 }}>
           <p style={{ float: "left" }}>
             Built with care by Alex Rich and{" "}
-            <a href="https://www.serendipidata.com" target="_blank">Cameron Yick</a>
+            <a href="https://www.serendipidata.com" target="_blank">
+              Cameron Yick
+            </a>
           </p>
         </div>
       </div>
@@ -365,17 +381,20 @@ const App = props => {
           width: 80%;
           margin-left: auto;
           margin-right: auto;
-          margin-bottom: 25px;
+          margin-bottom: 15px;
         }
 
         .texasInfo {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.2em;
-          padding-top: 10px;
+        }
+
+        p.texasInfo {
+          margin: 5px 0 0;
         }
 
         .texasInfo a.alertLink {
-          color: #e53935;
+          color: ${ALERT_RED};
         }
       `}</style>
     </>
