@@ -587,7 +587,7 @@ const Home = props => (
     <ReactSEOMetaTags
       render={el => (
         <Head>
-          <title>Love Texans: Stay Home</title>
+          <title>Love Texans: Stay home</title>
           <link rel="icon" href="/favicon.ico" />
           <meta
             name="viewport"
@@ -599,7 +599,7 @@ const Home = props => (
       )}
       website={{
         url: "https://lovetexans.org",
-        title: "LoveTexans: Stay Home",
+        title: "Love Texans. Stay home.",
         image: "https://lovetexans.org/lovetexans_card.png",
         datePublished: "2020-03-29T13:56:03.123Z",
         language: "en-US",
@@ -610,14 +610,14 @@ const Home = props => (
           "View COVID-19 cases within driving distance using public data"
       }}
       facebook={{
-        title: "LoveTexans: Stay Home",
+        title: "Love Texans. Stay home.",
         description:
           "View COVID-19 cases within driving distance using public data",
         image: "https://lovetexans.org/lovetexans_card.png"
       }}
       twitter={{
         twitterUser: "@hydrosquall",
-        title: "LoveTexans: Stay Home",
+        title: "Love Texans. Stay home.",
         description:
           "View COVID-19 cases within driving distance using public data",
         image: "https://lovetexans.org/lovetexans_card.png"
