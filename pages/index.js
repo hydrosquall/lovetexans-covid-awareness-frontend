@@ -28,6 +28,10 @@ import { titleCase } from "title-case";
 
 import { useSpring, animated } from "react-spring";
 
+import { format } from 'd3-format';
+
+const thousandFormatter = format(",");
+
 //github.com/nygardk/react-share#share-button-props
 // const LAST_UPDATED = "March 28 at 8:00 PM";
 const BUTTON_TITLE = "Officially Reported COVID-19 Cases in Texas: Map";
@@ -154,7 +158,7 @@ const Summary = props => {
     status
   } = props.data;
   const { updateMonth, updateDay, updateHour, updateTimezone } = props;
-  console.log({ status });
+
   const updateTimeMessage = `${updateMonth}/${updateDay} at ${updateHour}:00 ${updateTimezone}`;
 
   if (status === "notInTexas") {
@@ -177,19 +181,31 @@ const Summary = props => {
       <div id="textDescription">
         <p id="oneHourData">
           Over{" "}
-          <span id="oneHourCases"> {oneHourPositives} confirmed cases</span>
+          <span id="oneHourCases" className="calloutNumber">
+            {" "}
+            {thousandFormatter(oneHourPositives)} confirmed cases
+          </span>
           {oneHourDeaths > 0 && (
             <>
               {" "}
-              and <span id="oneHourDeaths">{oneHourDeaths} Deaths </span>
+              and{" "}
+              <span id="oneHourDeaths">
+                {thousandFormatter(oneHourDeaths)} Deaths{" "}
+              </span>
             </>
           )}{" "}
-          are within roughly 1-hour drive of you.
+          are within a roughly 1-hour drive of you.
         </p>
         <p className="texasInfo">
-          Texas has had at least <span id="texasCases">{texasPositives}</span>{" "}
-          confirmed cases and <span id="texasDeaths">{texasDeaths}</span> Deaths{" "}
-          so far.
+          Texas has had at least{" "}
+          <span id="texasCases" className="calloutNumber">
+            {thousandFormatter(texasPositives)}
+          </span>{" "}
+          confirmed cases and{" "}
+          <span id="texasDeaths" className="calloutNumber">
+            {thousandFormatter(texasDeaths)}
+          </span>{" "}
+          Deaths so far.
         </p>
         <p className="texasInfo">
           102,302 Americans have been infected.{" "}
@@ -232,7 +248,7 @@ const Summary = props => {
         .texasInfo a {
           color: ${ALERT_RED};
         }
-        #textDescription span {
+        #textDescription .calloutNumber {
           font-weight: bold;
         }
 
@@ -334,9 +350,25 @@ const App = props => {
             position: "relative"
           }}
         ></iframe>
+        <div style={{  height: 25, marginTop: 10 }}>
+          <div style={{ float: "left" }}>
+            <img
+              src="f3_logo_small.png"
+              style={{ width: "20px", height: "20px" }}
+            />{" "}
+            Feedback?{" "}
+            <a href="mailto:alex@f3healthcare.com">Email the F3 Health Team</a>
+          </div>
+          <div style={{ float: "right" }}>
+            data:{" "}
+            <a href="https://www.dshs.texas.gov/coronavirus/" target="_blank">
+              Texas DSHS
+            </a>
+          </div>
+        </div>
       </div>
       <div className="container">
-        <div style={{ marginTop: 10 }}>
+        <div>
           <List horizontal style={{ display: "flex", alignItems: "center" }}>
             <List.Item key={"clipboardKey"}>
               <Button
@@ -363,22 +395,6 @@ const App = props => {
               }
             )}
           </List>
-        </div>
-        <div style={{ marginTop: 20, height: 20 }} className="attributions">
-          <div style={{ float: "left" }}>
-            <img
-              src="f3_logo_small.png"
-              style={{ width: "20px", height: "20px" }}
-            />{" "}
-            Feedback?{" "}
-            <a href="mailto:alex@f3healthcare.com">Email the F3 Health Team</a>
-          </div>
-          <div style={{ float: "right" }}>
-            data:{" "}
-            <a href="https://www.dshs.texas.gov/coronavirus/" target="_blank">
-              Texas DSHS
-            </a>
-          </div>
         </div>
       </div>
       <div className="container">
