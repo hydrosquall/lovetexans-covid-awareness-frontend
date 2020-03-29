@@ -307,23 +307,7 @@ const App = props => {
         ></iframe>
       </div>
       <div className="container">
-        <p className="texasInfo">
-          Learn more about how{" "}
-          <a
-            href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine"
-            target="_blank"
-            className="alertLink"
-          >
-            Social Distancing can save Texans' Lives
-          </a>
-        </p>
-        <p className="texasInfo">
-          View data for the rest of the state on the{" "}
-          <a href="https://txdshs.maps.arcgis.com/apps/opsdashboard/index.html#/ed483ecd702b4298ab01e8b9cafc8b83">
-            Texas DSHS Covid Dashboard
-          </a>
-        </p>
-        <div style={{ marginTop: 15 }}>
+        <div style={{ marginTop: 10 }}>
           <List horizontal style={{ display: "flex", alignItems: "center" }}>
             <List.Item>
               <Button
@@ -334,7 +318,7 @@ const App = props => {
                 }}
               >
                 <Icon name="copy"></Icon>
-                Click to copy this page link to your clipboard
+                Click to copy link to your clipboard
               </Button>
             </List.Item>
             {BUTTONS.map(
@@ -351,7 +335,7 @@ const App = props => {
             )}
           </List>
         </div>
-        <div style={{ marginTop: 20, height: 20 }}>
+        <div style={{ marginTop: 20, height: 20 }} className="attributions">
           <div style={{ float: "left" }}>
             <img
               src="f3_logo_small.png"
@@ -367,7 +351,26 @@ const App = props => {
             </a>
           </div>
         </div>
-        <div style={{ marginTop: 15 }}>
+      </div>
+      <div className="container">
+        <p className="texasInfo">
+          Learn more about how{" "}
+          <a
+            href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine"
+            target="_blank"
+            className="alertLink"
+          >
+            Social Distancing can save Texans' Lives
+          </a>
+        </p>
+        <p className="texasInfo">
+          View data for the rest of the state on the{" "}
+          <a href="https://txdshs.maps.arcgis.com/apps/opsdashboard/index.html#/ed483ecd702b4298ab01e8b9cafc8b83">
+            Texas DSHS Covid Dashboard
+          </a>
+        </p>
+
+        <div style={{ marginTop: 15, width: "100%" }} className="attributions">
           <p style={{ float: "left" }}>
             Built with care by Alex Rich and{" "}
             <a href="https://www.serendipidata.com" target="_blank">
@@ -376,6 +379,7 @@ const App = props => {
           </p>
         </div>
       </div>
+
       <style jsx>{`
         .container {
           width: 80%;
@@ -386,7 +390,11 @@ const App = props => {
 
         .texasInfo {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 1.2em;
+          font-size: 1.1em;
+        }
+
+        .attributions {
+          font-size: 1.1em;
         }
 
         p.texasInfo {
