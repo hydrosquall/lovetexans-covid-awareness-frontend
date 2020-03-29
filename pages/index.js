@@ -88,10 +88,16 @@ const getSummaryData = async address => {
   return data;
 };
 
-const getDataLastUpdated = async address => {
+const getDataLastUpdated = async () => {
   const { data } = await axios(`${LION_BASE_URL}/lion_data_update`);
   return data;
 };
+
+const getNationalSummary = async () => {
+  const { data } = await axios(`${LION_BASE_URL}/national_summary`);
+  return data;
+};
+
 
 const AddressForm = props => {
   return (
@@ -157,14 +163,22 @@ const Summary = props => {
     texasPositives,
     status
   } = props.data;
-  const { updateMonth, updateDay, updateHour, updateTimezone } = props;
+  const { updateMonth, updateDay, updateHour, updateTimezone } = props.updateTimeData || {};
+  const { usConfirmed, usDeaths } = props.nationalSummary || {};
 
   const updateTimeMessage = `${updateMonth}/${updateDay} at ${updateHour}:00 ${updateTimezone}`;
+  const nationalMessage = `${thousandFormatter(usConfirmed)} Americans have been infected, ${thousandFormatter(usDeaths)} have died.`;
 
   if (status === "notInTexas") {
     return (
-      <p style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', fontSize: '1.2em' } }>
-        102,302 Americans have been infected.{" "}
+      <p
+        style={{
+          fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+          fontSize: "1.2em"
+        }}
+      >
+        {" "}
+        {nationalMessage}
         <a
           href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
           target="_blank"
@@ -208,7 +222,7 @@ const Summary = props => {
           Deaths so far.
         </p>
         <p className="texasInfo">
-          102,302 Americans have been infected.{" "}
+          {nationalMessage}{" "}
           <a
             href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
             target="_blank"
@@ -294,6 +308,10 @@ const App = props => {
   );
 
   const { data: updateTimeData } = useQuery('dataLastUpdated', getDataLastUpdated);
+  const { data: nationalSummary } = useQuery(
+    "nationalSummary",
+    getNationalSummary
+  );
 
   const shouldBeTall =
     (summaryData && summaryData.status !== 'notInTexas') &&
@@ -336,7 +354,11 @@ const App = props => {
               </div>
             )}
             {!isFetching && summaryData && (
-              <Summary data={summaryData} {...updateTimeData} />
+              <Summary
+                data={summaryData}
+                updateTimeData={updateTimeData}
+                nationalSummary={nationalSummary}
+              />
             )}
           </animated.div>
         </Segment>
@@ -350,7 +372,7 @@ const App = props => {
             position: "relative"
           }}
         ></iframe>
-        <div style={{  height: 25, marginTop: 10 }}>
+        <div style={{ height: 25, marginTop: 10 }}>
           <div style={{ float: "left" }}>
             <img
               src="f3_logo_small.png"
