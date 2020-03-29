@@ -101,6 +101,7 @@ const getNationalSummary = async () => {
 const VideoModal = () => (
   <Modal
     basic
+    closeIcon
     trigger={
       <a href={"#"} className="video-link">
         Watch a video about how this tool was built and why
