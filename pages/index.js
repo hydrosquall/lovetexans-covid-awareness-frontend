@@ -41,7 +41,7 @@ const BUTTONS = [
   [
     TwitterShareButton,
     TwitterIcon,
-    { hashtags: ["covid19", "socialdistancing"], title: BUTTON_TITLE }
+    { hashtags: ["covid19", "socialdistancing", "datavis", "publichealth"], title: BUTTON_TITLE }
   ],
   [
     LinkedinShareButton,
@@ -432,6 +432,13 @@ const App = props => {
             data:{" "}
             <a href="https://www.dshs.texas.gov/coronavirus/" target="_blank">
               Texas DSHS
+            </a>
+            ,{" "}
+            <a
+              href="https://github.com/CSSEGISandData/COVID-19"
+              target="_blank"
+            >
+              Johns Hopkins CSSE
             </a>
           </div>
         </div>
