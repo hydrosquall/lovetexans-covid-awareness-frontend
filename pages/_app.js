@@ -6,8 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/css/bootstrap-theme.min.css";
 import "semantic-ui-css/semantic.min.css";
 
-import ReactGA from "react-ga";
 import { datadogRum } from "@datadog/browser-rum";
+
+import ReactGA from "react-ga";
 
 
 // Analytics on clientside only
@@ -18,11 +19,8 @@ if (process.browser) {
   ReactGA.pageview(window.location.pathname + window.location.search);
 
   datadogRum.init({
-    clientToken: "pub50cd0786e6da033ae81f65e910f2baa7",
-    applicationId: "bc89c30a-e7c7-4b39-b829-b7682f14d269",
-    datacenter: "us",
-    resourceSampleRate: 100,
-    sampleRate: 100
+    clientToken: "pubec0cd7c11ee53d65f9469cefba029553",
+    applicationId: "48ad9f71-e441-4f15-9047-a0a8a65c5b49"
   });
 }
 
