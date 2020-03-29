@@ -151,10 +151,26 @@ const Summary = props => {
     oneHourPositives,
     texasDeaths,
     texasPositives,
+    status
   } = props.data;
   const { updateMonth, updateDay, updateHour, updateTimezone } = props;
-  console.log()
+  console.log({ status });
   const updateTimeMessage = `${updateMonth}/${updateDay} at ${updateHour}:00 ${updateTimezone}`;
+
+  if (status === "notInTexas") {
+    return (
+      <p style={{ fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif', fontSize: '1.2em' } }>
+        102,302 Americans have been infected.{" "}
+        <a
+          href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
+          target="_blank"
+          style={{ color: ALERT_RED }}
+        >
+          Protect Texans. Stay home. Stay safe.
+        </a>
+      </p>
+    );
+  }
 
   return (
     <>
@@ -263,7 +279,11 @@ const App = props => {
 
   const { data: updateTimeData } = useQuery('dataLastUpdated', getDataLastUpdated);
 
-  const shouldBeTall = isFetching && status === 'loading' || summaryData !== undefined;
+  const shouldBeTall =
+    (summaryData && summaryData.status !== 'notInTexas') &&
+    ((isFetching && status === "loading") ||
+    summaryData !== undefined) ;
+  console.log({ summaryData, shouldBeTall });
   const animatedProps = useSpring({ minHeight: shouldBeTall ? 180 : 50 });
 
   return (
@@ -398,7 +418,7 @@ const App = props => {
 
       <style jsx>{`
         .container {
-          width: 80%;
+          width: 85%;
           margin-left: auto;
           margin-right: auto;
           margin-bottom: 15px;
