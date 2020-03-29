@@ -95,7 +95,7 @@ const AddressForm = props => {
         }}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
-          props.setAddress(values.address);
+          props.setAddress(titleCase(values.address.toLowerCase()));
           setTimeout(() => {
             setSubmitting(false);
           }, 2000);
@@ -149,36 +149,28 @@ const Summary = props => {
       <div id="textDescription">
         <div id="oneHourData">
           Over{" "}
-          <strong>
-            <span id="oneHourCases"> {oneHourPositives}</span> confirmed cases
-          </strong>{" "}
-          and{" "}
-          <strong>
-            <span id="oneHourDeaths">{oneHourDeaths}</span> Deaths
-          </strong>{" "}
+          <span id="oneHourCases"> {oneHourPositives} confirmed cases</span>
+          {oneHourDeaths > 0 && (
+            <>
+              {" "}
+              and <span id="oneHourDeaths">{oneHourDeaths} Deaths </span>
+            </>
+          )}{" "}
           are within a 1-hour drive of you.
         </div>
         <div className="texasInfo">
-          Texas has at least{" "}
-          <strong>
-            <span id="texasCases">{texasPositives}</span> confirmed cases
-          </strong>{" "}
-          and{" "}
-          <strong>
-            <span id="texasDeaths">{texasDeaths}</span> Deaths
-          </strong>{" "}
+          Texas has at least <span id="texasCases">{texasPositives}</span>{" "}
+          confirmed cases and <span id="texasDeaths">{texasDeaths}</span> Deaths{" "}
           so far.
         </div>
         <div className="texasInfo">
           102,302 Americans have been infected.{" "}
-          <strong>
-            <a
-              style={{ color: "red" }}
-              href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
-            >
-              Please stay home. Stay safe.{" "}
-            </a>
-          </strong>
+          <a
+            href="https://www.wptv.com/news/local-news/water-cooler/please-stay-home-for-us-nurses-make-plea-for-you-to-stay-home-amid-coronavirus"
+            target="_blank"
+          >
+            Please stay home. Stay safe.
+          </a>
         </div>
         <div id="americanTotal" style={{ paddingBottom: 15 }}>
           <a href={"#"} style={{ float: "left" }}>
@@ -211,6 +203,13 @@ const Summary = props => {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.2em;
           padding-top: 10px;
+        }
+
+        .texasInfo a {
+          color: #e53935;
+        }
+        #textDescription span {
+          font-weight: bold;
         }
       `}</style>
     </>
@@ -255,8 +254,8 @@ const App = props => {
         <Header
           as="h1"
           style={{
-            paddingTop: `1em`,
-            paddingBottom: "0.5em",
+            paddingTop: `.75em`,
+            paddingBottom: "0.2em",
             fontWeight: 700,
             fontSize: "2.5rem"
           }}
@@ -312,12 +311,9 @@ const App = props => {
       </div>
       <div className="container">
         <div className="texasInfo">
-          Learn more about how{" "}
-          <a
-            style={{ color: "red" }}
-            href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine"
-          >
-            Social Distancing can save Texans' Lives
+          Learn more about how
+          <a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-social-distancing-and-self-quarantine" target="_blank" className="alert">
+          Social Distancing can save Texans' Lives
           </a>
         </div>
         <div className="texasInfo">
@@ -326,31 +322,32 @@ const App = props => {
             Texas DSHS Covid Dashboard
           </a>
         </div>
-        <div style={{ paddingTop: 15 }}>
-          <Button
-            icon
-            labelPosition="left"
-            onClick={() => {
-              copy(window.location);
-            }}
-          >
-            <Icon name="copy"></Icon>
-            Click to copy this page link to your clipboard
-          </Button>
-        </div>
-        <div style={{ marginTop: 10 }}>
-          <List horizontal>
-            {BUTTONS.map(([ButtonComponent, IconComponent, extraProps = {}], i) => {
-              const url = "https://www.lovetexans.org";
-              const title = "Daily updates of Covid-19 cases in counties near you";
-              return (
-                <List.Item>
-                  <ButtonComponent url={url} key={i} {...extraProps}>
-                    <IconComponent size={32} round={true}></IconComponent>
-                  </ButtonComponent>
-                </List.Item>
-              );
-            })}
+        <div style={{ marginTop: 15 }}>
+          <List horizontal style={{ display: "flex", alignItems: "center" }}>
+            <List.Item>
+              <Button
+                icon
+                labelPosition="left"
+                onClick={() => {
+                  copy(window.location);
+                }}
+              >
+                <Icon name="copy"></Icon>
+                Click to copy this page link to your clipboard
+              </Button>
+            </List.Item>
+            {BUTTONS.map(
+              ([ButtonComponent, IconComponent, extraProps = {}], i) => {
+                const url = "https://www.lovetexans.org";
+                return (
+                  <List.Item>
+                    <ButtonComponent url={url} key={i} {...extraProps}>
+                      <IconComponent size={32} round={true}></IconComponent>
+                    </ButtonComponent>
+                  </List.Item>
+                );
+              }
+            )}
           </List>
         </div>
       </div>
@@ -366,6 +363,10 @@ const App = props => {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.2em;
           padding-top: 10px;
+        }
+
+        .texasInfo a.alert {
+          color: #e53935
         }
       `}</style>
     </>
