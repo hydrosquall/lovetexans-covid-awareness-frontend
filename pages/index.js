@@ -597,7 +597,7 @@ const Home = props => (
       website={{
         url: "https://lovetexans.org",
         title: "LoveTexans: Stay Home",
-        image: "/lovetexans_card.png",
+        image: "https://lovetexans.org/lovetexans_card.png",
         datePublished: "2020-03-29T13:56:03.123Z",
         language: "en-US",
         author: {
@@ -610,14 +610,14 @@ const Home = props => (
         title: "LoveTexans: Stay Home",
         description:
           "View a map of COVID-19 cases within driving distance of you using public data",
-        image: "/lovetexans_card.png"
+        image: "https://lovetexans.org/lovetexans_card.png"
       }}
       twitter={{
         twitterUser: "@hydrosquall",
         title: "LoveTexans: Stay Home",
         description:
           "View a map of COVID-19 cases within driving distance of you using public data",
-        image: "/lovetexans_card.png"
+        image: "https://lovetexans.org/lovetexans_card.png"
       }}
     />
     <App queryParams={props.query} />
