@@ -288,13 +288,6 @@ const App = () => {
         </div>
       </div>
       <style jsx>{`
-        #map {
-          position: relative;
-          width: 100%;
-          height: 420px;
-
-        }
-
         .container {
           width: 80%;
           margin-left: auto;
@@ -316,7 +309,7 @@ const Home = () => (
   <div className="container">
     <Head>
       <title>Covid Cases Near You (Texas)</title>
-      <link rel="icon" href="/f3_logo_small.png" />
+      <link rel="icon" href="/favicon.ico" />
       <meta
         name="viewport"
         content="width=device-width,
@@ -324,7 +317,6 @@ const Home = () => (
       />
     </Head>
     <App />
-
     <style jsx global>{`
       html,
       body {
@@ -342,11 +334,4 @@ const Home = () => (
   </div>
 );
 
-export async function getStaticProps(context) {
-  console.log(context);
-  return {
-    props: {} // will be passed to the page component as props
-  };
-}
-
-export default Home
+export default Home;
