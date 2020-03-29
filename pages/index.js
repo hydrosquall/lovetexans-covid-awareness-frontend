@@ -23,6 +23,9 @@ import {
   WhatsappIcon,
   WhatsappShareButton
 } from "react-share";
+
+import { ReactSEOMetaTags } from "react-seo-meta-tags";
+
 import { Button, Header, Icon, Input, List, Segment, Modal, Image, Embed } from "semantic-ui-react";
 import { titleCase } from "title-case";
 
@@ -575,15 +578,48 @@ const App = props => {
 
 const Home = props => (
   <div className="container">
-    <Head>
-      <title>Love Texans: Stay Home</title>
-      <link rel="icon" href="/favicon.ico" />
-      <meta
-        name="viewport"
-        content="width=device-width,
+    {/* <Head>
+
+    </Head> */}
+    <ReactSEOMetaTags
+      render={el => (
+        <Head>
+          <title>Love Texans: Stay Home</title>
+          <link rel="icon" href="/favicon.ico" />
+          <meta
+            name="viewport"
+            content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-      />
-    </Head>
+          />
+          {el}
+        </Head>
+      )}
+      website={{
+        url: "https://lovetexans.org",
+        title: "LoveTexans: Stay Home",
+        image: "/lovetexans_card.png",
+        datePublished: "2020-03-29T13:56:03.123Z",
+        language: "en-US",
+        author: {
+          name: "Cameron Yick"
+        },
+        description:
+          "View a map of COVID-19 cases within driving distance of you using public data"
+      }}
+      facebook={{
+        title: "LoveTexans: Stay Home",
+        description:
+          "View a map of COVID-19 cases within driving distance of you using public data",
+        image: "/lovetexans_card.png"
+      }}
+      twitter={{
+        twitterUser: "@hydrosquall",
+        title: "LoveTexans: Stay Home",
+        description:
+          "View a map of COVID-19 cases within driving distance of you using public data",
+        image: "/lovetexans_card.png"
+      }}
+    />
     <App queryParams={props.query} />
     <style jsx global>{`
       html,

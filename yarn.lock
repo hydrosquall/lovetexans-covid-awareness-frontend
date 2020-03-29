@@ -5106,6 +5106,11 @@ react-query@^1.1.7:
   dependencies:
     "@scarf/scarf" "^0.1.3"
 
+react-seo-meta-tags@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-seo-meta-tags/-/react-seo-meta-tags-1.1.0.tgz#00e1a27e2142384f5c0f99d111aff93ca14f17af"
+  integrity sha512-q+k1nlW8OjpTeiV7kQHjRhTVUTbRHjdCjhuK3SAEvuG+zjZejbLem7OE5t1dkULTrxcLllTNGLKY35N3QgX3HQ==
+
 react-share@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/react-share/-/react-share-4.1.0.tgz#45cbed5ddcbb24504143bcfc0e9b8a729ce274e0"
