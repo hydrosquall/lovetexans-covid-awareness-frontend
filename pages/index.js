@@ -3,7 +3,7 @@ import copy from "copy-to-clipboard";
 import { Formik } from "formik";
 import Head from "next/head";
 import queryState from "query-state";
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import {
   EmailIcon,
@@ -23,7 +23,7 @@ import {
   WhatsappIcon,
   WhatsappShareButton
 } from "react-share";
-import { Button, Header, Icon, Input, List, Segment } from "semantic-ui-react";
+import { Button, Header, Icon, Input, List, Segment, Modal, Image, Embed } from "semantic-ui-react";
 import { titleCase } from "title-case";
 
 import { useSpring, animated } from "react-spring";
@@ -97,6 +97,27 @@ const getNationalSummary = async () => {
   const { data } = await axios(`${LION_BASE_URL}/national_summary`);
   return data;
 };
+
+const VideoModal = () => (
+  <Modal
+    basic
+    trigger={
+      <a href={"#"} className="video-link">
+        Watch a video about how this tool was built and why
+      </a>
+    }
+  >
+    <Modal.Header>About this Tool</Modal.Header>
+    <Modal.Content>
+      <Embed
+        id="401929545"
+        placeholder="https://i.vimeocdn.com/video/870852202_640.webp"
+        source="vimeo"
+      />
+    </Modal.Content>
+  </Modal>
+);
+
 
 
 const AddressForm = props => {
@@ -203,7 +224,7 @@ const Summary = props => {
             <>
               {" "}
               and{" "}
-              <span id="oneHourDeaths">
+              <span id="oneHourDeaths" className="calloutNumber">
                 {thousandFormatter(oneHourDeaths)} Deaths{" "}
               </span>
             </>
@@ -231,15 +252,14 @@ const Summary = props => {
           </a>
         </p>
         <div id="videoBlock">
-          <a href={"#"} className="video-link">
-            Watch a video about how this tool was built and why
-          </a>
+          <VideoModal></VideoModal>
 
           <div className="dataSourceLink">
             <span className="updateDate"> Updated: {updateTimeMessage} </span>
           </div>
         </div>
       </div>
+
       <style jsx>{`
         #textDescription p {
           margin: 8px 0 0;
@@ -292,7 +312,6 @@ const Summary = props => {
           .videoLink {
             margin-top: 15px;
           }
-
           .dataSourceLink {
             float: left;
             padding-top: 5px;
@@ -345,7 +364,6 @@ const App = props => {
     (summaryData && summaryData.status !== 'notInTexas') &&
     ((isFetching && status === "loading") ||
     summaryData !== undefined) ;
-  console.log({ summaryData, shouldBeTall });
   const animatedProps = useSpring({ minHeight: shouldBeTall ? 180 : 50 });
 
   return (
@@ -363,7 +381,7 @@ const App = props => {
           Officially Reported Covid-19 Cases Near You
         </Header>
 
-        <Segment style={{ fontSize: 16 }}>
+        <Segment style={{ fontSize: 16 }} basic>
           {address === "" && (
             <p>
               Enter any Texan City or Address to find nearby COVID-19 cases.
@@ -465,7 +483,15 @@ const App = props => {
           </a>
         </p>
 
-        <div style={{ marginTop: 15, width: "100%" }} className="attributions">
+        <div
+          style={{
+            marginTop: 15,
+            width: "100%",
+            height: 25,
+            marginBottom: "25px"
+          }}
+          className="attributions"
+        >
           <p style={{ float: "left" }}>
             Built with care by{" "}
             <a
@@ -487,13 +513,14 @@ const App = props => {
           width: 80%;
           margin-left: auto;
           margin-right: auto;
+          margin-bottom: 15px;
         }
+
         @media (max-width: 501px) {
           .page-container {
             width: 95% !important;
             margin-left: auto;
             margin-right: auto;
-            margin-bottom: 15px;
           }
         }
 
@@ -547,13 +574,13 @@ const Home = props => (
         width: 80%;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: 15px;
       }
       @media (max-width: 501px) {
         .page-container {
           width: 99% !important;
           margin-left: auto;
           margin-right: auto;
-          margin-bottom: 15px;
         }
       }
     `}</style>
