@@ -29,7 +29,7 @@ import { titleCase } from "title-case";
 import { useSpring, animated } from "react-spring";
 
 //github.com/nygardk/react-share#share-button-props
-const LAST_UPDATED = "March 28 at 8:00 PM";
+// const LAST_UPDATED = "March 28 at 8:00 PM";
 const BUTTON_TITLE = "Officially Reported COVID-19 Cases in Texas: Map";
 const ALERT_RED = '#e53935';
 const BUTTONS = [
@@ -76,12 +76,16 @@ const LION_BASE_URL = USE_CACHE ? CACHED_URL : LIVE_URL;
 const getMapUrl = address => {
   return `${LION_BASE_URL}/lion_map?address=${encodeURIComponent(address)}`;
 };
-const getSummaryUrl = () => {
-  return `${LION_BASE_URL}/lion_summary`;
-};
 
 const getSummaryData = async address => {
-  const { data } = await axios(getSummaryUrl(), { params: { address } });
+  const { data } = await axios(`${LION_BASE_URL}/lion_summary`, {
+    params: { address }
+  });
+  return data;
+};
+
+const getDataLastUpdated = async address => {
+  const { data } = await axios(`${LION_BASE_URL}/lion_data_update`);
   return data;
 };
 
@@ -146,18 +150,18 @@ const Summary = props => {
     oneHourDeaths,
     oneHourPositives,
     texasDeaths,
-    texasPositives
+    texasPositives,
   } = props.data;
+  const { updateMonth, updateDay, updateHour, updateTimezone } = props;
+  console.log()
+  const updateTimeMessage = `${updateMonth}/${updateDay} at ${updateHour}:00 ${updateTimezone}`;
 
   return (
     <>
       <div id="textDescription">
         <p id="oneHourData">
           Over{" "}
-          <span id="oneHourCases">
-            {" "}
-            {oneHourPositives} confirmed cases
-          </span>
+          <span id="oneHourCases"> {oneHourPositives} confirmed cases</span>
           {oneHourDeaths > 0 && (
             <>
               {" "}
@@ -180,17 +184,16 @@ const Summary = props => {
             Please stay home. Stay safe.
           </a>
         </p>
-        <p id="americanTotal" style={{ paddingBottom: 20 }}>
+        <div id="americanTotal" style={{ paddingBottom: 20, marginTop: 10 }}>
           <a href={"#"} style={{ float: "left" }}>
             Watch a video about how this tool was built and why
           </a>
           <div style={{ float: "right" }}>
-            <span> Updated: {LAST_UPDATED} </span> CST
+            <span> Updated: {updateTimeMessage} </span>
           </div>
-        </p>
+        </div>
       </div>
       <style jsx>{`
-
         #textDescription p {
           margin: 8px 0 0;
         }
@@ -238,8 +241,6 @@ const App = props => {
     [setAddressRaw]
   );
 
-
-
   const normalizedAddress = useMemo(() => {
     // TODO... remove special characters like commas?
     return address
@@ -254,6 +255,8 @@ const App = props => {
     getSummaryData
   );
 
+  const { data: updateTimeData } = useQuery('dataLastUpdated', getDataLastUpdated);
+  console.log(updateTimeData);
   const shouldBeTall = isFetching && status === 'loading' || summaryData !== undefined;
   const animatedProps = useSpring({ minHeight: shouldBeTall ? 180 : 50 });
 
@@ -273,8 +276,6 @@ const App = props => {
         </Header>
 
         <Segment style={{ fontSize: 16 }}>
-          {/* <AnimateHeight duration={200} height={segmentHeight}> */}
-
           {address === "" && (
             <p>
               Enter any Texan City or Address to find nearby COVID-19 cases.
@@ -292,9 +293,10 @@ const App = props => {
                 load.
               </div>
             )}
-            {!isFetching && summaryData && <Summary data={summaryData} />}
+            {!isFetching && summaryData && (
+              <Summary data={summaryData} {...updateTimeData} />
+            )}
           </animated.div>
-          {/* </AnimateHeight> */}
         </Segment>
 
         <iframe
