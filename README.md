@@ -4,6 +4,13 @@ https://nextjs.org/blog/create-next-app
 
 Converted Alex's app to React code (mostly): https://magic.reactjs.net/htmltojsx.htm
 
+## TODO
+
+- Replace Darklang cache with custom redis or elasticcache
+- Responsive/localization
+- Analytics (RUM)
+- Monitoring Lambda functions with DD doesn't really work well with the staging account, so stick to serverless for now.
+
 ## Getting Started
 
 First, run the development server:

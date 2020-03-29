@@ -1,4 +1,4 @@
-import Head from 'next/head'
+import Head from 'next/head';
 
 import React, { useState, useCallback, useMemo } from "react";
 import { Formik } from "formik";
@@ -9,10 +9,17 @@ import { Input, Segment, Button, Header } from "semantic-ui-react";
 import queryState from "query-state";
 import { titleCase } from "title-case";
 import copy from "copy-to-clipboard";
-
+import qs from 'qs';
 
 // API Fetching
-const LION_BASE_URL = "https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev";
+// const LAMBDA_ID = "cvro944efg";
+// const LIVE_URL = `https://${LAMBDA_ID}.execute-api.us-east-1.amazonaws.com/dev`;
+const LIVE_URL = "";
+const CLOUDFRONT_ID = "d2y5qgptjywme4";
+const CACHED_URL = `https://${CLOUDFRONT_ID}.cloudfront.net`;
+const USE_CACHE = true;
+const LION_BASE_URL = USE_CACHE ? CACHED_URL : LIVE_URL;
+
 const getMapUrl = (address) => {
   return `${LION_BASE_URL}/lion_map?address=${encodeURIComponent(address)}`
 }
@@ -24,7 +31,6 @@ const getSummaryData = async (address) => {
   const { data } = await axios(getSummaryUrl(), { params: { address }, crossorigin: true });
   return data;
 };
-
 
 const AddressForm = (props) => {
   return (
@@ -49,24 +55,24 @@ const AddressForm = (props) => {
       >
         {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <form onSubmit={handleSubmit} className="form-inline">
-              <Input
-                action={{
-                  content: "Search",
-                  onClick: handleSubmit,
-                  style: { fontSize: 16 }
-                }}
-                type="text"
-                name="address"
-                fluid={true}
-                style={{  fontSize: 16 }}
-                placeholder={"Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.address}
-                loading={Boolean(props.isLoading)}
-                iconPosition="left"
-                icon='search'
-              />
+            <Input
+              action={{
+                content: "Search",
+                onClick: handleSubmit,
+                style: { fontSize: 16 }
+              }}
+              type="text"
+              name="address"
+              fluid={true}
+              style={{ fontSize: 16 }}
+              placeholder={"Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.address}
+              loading={Boolean(props.isLoading)}
+              iconPosition="left"
+              icon='search'
+            />
           </form>
         )}
       </Formik>
@@ -167,9 +173,12 @@ const App = () => {
     return queryState();
   }, []);
 
-  // Eventual listener
-  const [address, setAddressRaw] = useState( titleCase(appState.get("address") || "")
-  );
+  const [address, setAddressRaw] = useState(() => {
+    const path = process.browser ? window.location.hash.split("#?")[1] : "";
+    const params =  qs.parse(path);
+    return titleCase(params.address || "")
+  });
+
   const setAddress = useCallback((address) => {
     appState.set("address", address);
     setAddressRaw(address);
@@ -183,7 +192,7 @@ const App = () => {
       .split(/\s+/)
       .join(" ")
       .toLowerCase();
-  }, [address])
+  }, [address]);
 
   const { status, data: summaryData, error, isFetching } = useQuery(
     normalizedAddress,
@@ -226,7 +235,16 @@ const App = () => {
           </div>
         </Segment>
 
-        <iframe src={getMapUrl(normalizedAddress)} id="map" frameBorder={0} />
+        {process.browser && <iframe
+          src={getMapUrl(normalizedAddress)}
+          frameBorder={0}
+          style={{
+            width: '100%',
+            height: '420px',
+            position: 'relative'
+          }}
+        ></iframe>}
+
         <div style={{ marginTop: 10 }}>
           <div style={{ float: "right" }}>
             data:{" "}
@@ -264,9 +282,8 @@ const App = () => {
               copy(window.location);
             }}
           >
-            To SHARE this page, click to copy to clipboard
+            To SHARE this link, click me to copy this link to your clipboard
           </Button>
-          {/* <span>{process.browser && window.location}</span> */}
         </div>
       </div>
       <style jsx>{`
@@ -274,8 +291,7 @@ const App = () => {
           position: relative;
           width: 100%;
           height: 420px;
-          left: 0%;
-          top: 0%;
+
         }
 
         .container {
@@ -324,5 +340,12 @@ const Home = () => (
     `}</style>
   </div>
 );
+
+export async function getStaticProps(context) {
+  console.log(context);
+  return {
+    props: {} // will be passed to the page component as props
+  };
+}
 
 export default Home
