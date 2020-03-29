@@ -5,7 +5,7 @@ import { Formik } from "formik";
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import { Input, Segment, Button } from "semantic-ui-react";
+import { Input, Segment, Button, Header } from "semantic-ui-react";
 import queryState from "query-state";
 import { titleCase } from "title-case";
 import copy from "copy-to-clipboard";
@@ -51,13 +51,14 @@ const AddressForm = (props) => {
           <form onSubmit={handleSubmit} className="form-inline">
               <Input
                 action={{
-                  content: "Search Cases",
+                  content: "Search",
                   onClick: handleSubmit,
                   style: { fontSize: 16 }
                 }}
                 type="text"
                 name="address"
-                style={{ width: "700px", fontSize: 16 }}
+                fluid={true}
+                style={{  fontSize: 16 }}
                 placeholder={"Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -72,7 +73,6 @@ const AddressForm = (props) => {
 
       <style jsx>{`
         .form-inline {
-          margin-top: 1em;
           margin-bottom: 1em;
         }
       `}</style>
@@ -92,7 +92,7 @@ const Summary = (props) => {
     <>
       <div id="textDescription">
         <div id="oneHourData">
-          There are at least{" "}
+          Over{" "}
           <strong>
             <span id="oneHourCases"> {oneHourPositives}</span> confirmed cases
           </strong>{" "}
@@ -100,7 +100,7 @@ const Summary = (props) => {
           <strong>
             <span id="oneHourDeaths">{oneHourDeaths}</span> Deaths
           </strong>{" "}
-          within about a 1-hour drive of you.
+          are within a 1-hour drive of you.
         </div>
         <div className="texasInfo">
           Texas has at least{" "}
@@ -124,12 +124,12 @@ const Summary = (props) => {
             </a>
           </strong>
         </div>
-        <div id="americanTotal">
+        <div id="americanTotal" style={{ paddingBottom: 15 }}>
           <a href={"#"} style={{ float: "left" }}>
             Watch a video about how this tool was built and why
           </a>
           <div style={{ float: "right" }}>
-            <span> Updated: March 28 at 12:00 PM </span> CST
+            <span> Updated: March 28 at 8:00 PM </span> CST
           </div>
         </div>
       </div>
@@ -142,6 +142,7 @@ const Summary = (props) => {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.5em;
           padding-top: 10px;
+          padding-bottom: 5px;
         }
 
         #americanTotal {
@@ -192,29 +193,38 @@ const App = () => {
   return (
     <>
       <div className="container">
-        <div id="title">Officially Reported Covid-19 Cases Near You</div>
-
-        {normalizedAddress === "" && (
-          <Segment style={{ fontSize: 15 }}>
+        <Header
+          as="h1"
+          style={{
+            paddingTop: `1em`,
+            paddingBottom: "0.5em",
+            fontWeight: 700,
+            fontSize: "2.5rem"
+          }}
+        >
+          Officially Reported Covid-19 Cases Near You
+        </Header>
+        <Segment style={{ fontSize: 15 }}>
+          {normalizedAddress === "" && (
             <p>
               Enter any Texan City or Address to find nearby COVID-19 cases.
             </p>
-          </Segment>
-        )}
-        <div style={{ minHeight: 130 }}>
-          <AddressForm
-            setAddress={setAddress}
-            initialAddress={titleCase(address.toLowerCase())}
-            isLoading={normalizedAddress && isFetching}
-          />
-          {isFetching && normalizedAddress && (
-            <div>
-              Submitted! Due to high demand, this may take a few moments to
-              load.
-            </div>
           )}
-          {!isFetching && summaryData && <Summary data={summaryData} />}
-        </div>
+          <div style={{ minHeight: 130 }}>
+            <AddressForm
+              setAddress={setAddress}
+              initialAddress={titleCase(address.toLowerCase())}
+              isLoading={normalizedAddress && isFetching}
+            />
+            {isFetching && normalizedAddress && (
+              <div>
+                Submitted! Due to high demand, this may take a few moments to
+                load.
+              </div>
+            )}
+            {!isFetching && summaryData && <Summary data={summaryData} />}
+          </div>
+        </Segment>
 
         <iframe src={getMapUrl(normalizedAddress)} id="map" frameBorder={0} />
         <div style={{ marginTop: 10 }}>
@@ -248,10 +258,14 @@ const App = () => {
             Texas DSHS Covid Dashboard
           </a>
         </div>
-        <div style={{ paddingTop: 15}}>
-          <Button onClick={() => {
-            copy(window.location);
-          }}>Copy page link to clipboard</Button>
+        <div style={{ paddingTop: 15 }}>
+          <Button
+            onClick={() => {
+              copy(window.location);
+            }}
+          >
+            To SHARE this page, click to copy to clipboard
+          </Button>
           {/* <span>{process.browser && window.location}</span> */}
         </div>
       </div>
@@ -269,14 +283,6 @@ const App = () => {
           margin-left: auto;
           margin-right: auto;
           margin-bottom: 25px;
-        }
-
-        #title {
-          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 2.5em;
-          padding-top: 1em;
-          padding-bottom: 0.7em;
-          font-weight: 700;
         }
 
         .texasInfo {
