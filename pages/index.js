@@ -1,6 +1,5 @@
 import Head from 'next/head';
 
-import { useRouter } from "next/router";
 import React, { useState, useCallback, useMemo } from "react";
 import { Formik } from "formik";
 import axios from "axios";
@@ -10,7 +9,6 @@ import { Input, Segment, Button, Header } from "semantic-ui-react";
 import queryState from "query-state";
 import { titleCase } from "title-case";
 import copy from "copy-to-clipboard";
-import qs from 'qs';
 
 // API Fetching
 // const LAMBDA_ID = "cvro944efg";
@@ -168,16 +166,14 @@ const Summary = (props) => {
   );
 }
 
-const App = () => {
+const App = (props) => {
 
   const appState = useMemo(() => {
-    return queryState({ }, { useSearch: true });
+    return queryState({ }, { useSearch: true }); // search instead of hash so that servers get it
   }, []);
-  const router = useRouter();
+
   const [address, setAddressRaw] = useState(() => {
-    const path =  router.asPath.split("/?")[1];
-    const params =  qs.parse(path);
-    return titleCase(params.address || "")
+    return titleCase(props.queryParams.address || "")
   });
 
   const setAddress = useCallback((address) => {
@@ -215,7 +211,7 @@ const App = () => {
           Officially Reported Covid-19 Cases Near You
         </Header>
         <Segment style={{ fontSize: 15 }}>
-          {normalizedAddress === "" && (
+          {address === "" && (
             <p>
               Enter any Texan City or Address to find nearby COVID-19 cases.
             </p>
@@ -236,13 +232,13 @@ const App = () => {
           </div>
         </Segment>
 
-         <iframe
+        <iframe
           src={getMapUrl(normalizedAddress)}
           frameBorder={0}
           style={{
-            width: '100%',
-            height: '420px',
-            position: 'relative'
+            width: "100%",
+            height: "420px",
+            position: "relative"
           }}
         ></iframe>
 
@@ -283,7 +279,7 @@ const App = () => {
               copy(window.location);
             }}
           >
-            To SHARE this link, click me to copy this link to your clipboard
+            To SHARE this page, click me to copy this link to your clipboard
           </Button>
         </div>
       </div>
@@ -305,7 +301,7 @@ const App = () => {
   );
 }
 
-const Home = () => (
+const Home = (props) => (
   <div className="container">
     <Head>
       <title>Covid Cases Near You (Texas)</title>
@@ -316,7 +312,7 @@ const Home = () => (
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       />
     </Head>
-    <App />
+    <App queryParams={props.query}/>
     <style jsx global>{`
       html,
       body {
@@ -333,5 +329,10 @@ const Home = () => (
     `}</style>
   </div>
 );
+
+Home.getInitialProps = ({ query }) => {
+  console.log(query);
+  return { query };
+};
 
 export default Home;
