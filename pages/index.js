@@ -69,6 +69,7 @@ const BUTTONS = [
 
 // API Fetching
 // const LAMBDA_ID = "cvro944efg";
+// const LAMBDA_ID = "kepxz0ztdf"; // ALEX live
 // const LIVE_URL = `https://${LAMBDA_ID}.execute-api.us-east-1.amazonaws.com/dev`;
 const LIVE_URL = "";
 // const CLOUDFRONT_ID = "d2y5qgptjywme4"; // previous test
