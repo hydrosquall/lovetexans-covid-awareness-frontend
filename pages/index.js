@@ -5,8 +5,7 @@ import { Formik } from "formik";
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import { Input } from "semantic-ui-react";
-
+import { Input, Segment } from "semantic-ui-react";
 // API Fetching
 const LION_BASE_URL = "https://cvro944efg.execute-api.us-east-1.amazonaws.com/dev";
 const getMapUrl = (address) => {
@@ -54,11 +53,14 @@ const AddressForm = (props) => {
                 type="text"
                 name="address"
                 style={{ width: "700px", fontSize: 16 }}
-                placeholder="Type any Texan City or Address to find nearby COVID-19 cases."
+                placeholder={"Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.address}
                 disabled={isSubmitting}
+                loading={props.isLoading}
+                iconPosition="left"
+                icon='search'
               />
           </form>
         )}
@@ -175,23 +177,36 @@ const App = () => {
     <>
       <div className="container">
         <div id="title">Officially Reported Covid-19 Cases Near You</div>
-        <AddressForm setAddress={setAddress} initialAddress={cleanAddress} />
 
-        {!isFetching && summaryData && <Summary data={summaryData} />}
-        {isFetching && cleanAddress && (
-          <div>
-            Submitted! Due to high demand, this may take a few moments to load.
-          </div>
+        {cleanAddress === "" && (
+          <Segment style={{ fontSize: 15 }}>
+            <p>
+              Enter any Texan City or Address to find nearby COVID-19 cases.
+            </p>
+          </Segment>
         )}
+        <div style={{ minHeight: 80 }}>
+          <AddressForm
+            setAddress={setAddress}
+            initialAddress={cleanAddress}
+            isLoading={cleanAddress && isFetching}
+          />
+          {isFetching && cleanAddress && (
+            <div>
+              Submitted! Due to high demand, this may take a few moments to
+              load.
+            </div>
+          )}
+          {!isFetching && summaryData && <Summary data={summaryData} />}
+        </div>
 
         <iframe src={getMapUrl(cleanAddress)} id="map" frameBorder={0} />
-
-        <div style={{ marginTop: 20}}>
+        <div style={{ marginTop: 20 }}>
           <div style={{ float: "right" }}>
             data:{" "}
             <a href="https://www.dshs.texas.gov/coronavirus/">Texas DSHS</a>
           </div>
-          <div style={{ float: "left"}}>
+          <div style={{ float: "left" }}>
             <img
               src="f3_logo_small.png"
               style={{ width: "20px", height: "20px" }}
