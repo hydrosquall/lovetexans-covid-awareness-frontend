@@ -26,19 +26,29 @@ import {
 
 import { ReactSEOMetaTags } from "react-seo-meta-tags";
 
-import { Button, Header, Icon, Input, List, Segment, Modal, Image, Embed } from "semantic-ui-react";
+import {
+  Button,
+  Header,
+  Icon,
+  Input,
+  List,
+  Segment,
+  Modal,
+  Image,
+  Embed
+} from "semantic-ui-react";
 import { titleCase } from "title-case";
 
 import { useSpring, animated } from "react-spring";
 
-import { format } from 'd3-format';
+import { format } from "d3-format";
 
-const thousandFormatter = format(",");
+const numberFormatter = format(",");
 
 //github.com/nygardk/react-share#share-button-props
 // const LAST_UPDATED = "March 28 at 8:00 PM";
 const BUTTON_TITLE = "COVID-19 Near You in Texas: Map";
-const ALERT_RED = '#e53935';
+const ALERT_RED = "#e53935";
 const BUTTONS = [
   [EmailShareButton, EmailIcon, { subject: BUTTON_TITLE }],
   [
@@ -123,8 +133,6 @@ const VideoModal = () => (
   </Modal>
 );
 
-
-
 const AddressForm = props => {
   return (
     <>
@@ -189,11 +197,14 @@ const Summary = props => {
     texasPositives,
     status
   } = props.data;
-  const { updateMonth, updateDay, updateHour, updateTimezone } = props.updateTimeData || {};
+  const { updateMonth, updateDay, updateHour, updateTimezone } =
+    props.updateTimeData || {};
   const { usConfirmed, usDeaths } = props.nationalSummary || {};
 
   const updateTimeMessage = `${updateMonth}/${updateDay} at ${updateHour}:00 ${updateTimezone}`;
-  const nationalMessage = `${thousandFormatter(usConfirmed)} Americans have been infected, ${thousandFormatter(usDeaths)} have died.`;
+  const nationalMessage = `${numberFormatter(
+    usConfirmed
+  )} Americans have been infected, ${numberFormatter(usDeaths)} have died.`;
 
   if (status === "notInTexas") {
     return (
@@ -223,14 +234,14 @@ const Summary = props => {
           Over{" "}
           <span id="oneHourCases" className="calloutNumber">
             {" "}
-            {thousandFormatter(oneHourPositives)} confirmed cases
+            {numberFormatter(oneHourPositives)} confirmed cases
           </span>
           {oneHourDeaths > 0 && (
             <>
               {" "}
               and{" "}
               <span id="oneHourDeaths" className="calloutNumber">
-                {thousandFormatter(oneHourDeaths)} Deaths{" "}
+                {numberFormatter(oneHourDeaths)} Deaths{" "}
               </span>
             </>
           )}{" "}
@@ -239,11 +250,11 @@ const Summary = props => {
         <p className="texasInfo">
           Texas has had at least{" "}
           <span id="texasCases" className="calloutNumber">
-            {thousandFormatter(texasPositives)}
+            {numberFormatter(texasPositives)}
           </span>{" "}
           confirmed cases and{" "}
           <span id="texasDeaths" className="calloutNumber">
-            {thousandFormatter(texasDeaths)}
+            {numberFormatter(texasDeaths)}
           </span>{" "}
           Deaths so far.
         </p>
@@ -359,16 +370,19 @@ const App = props => {
     getSummaryData
   );
 
-  const { data: updateTimeData } = useQuery('dataLastUpdated', getDataLastUpdated);
+  const { data: updateTimeData } = useQuery(
+    "dataLastUpdated",
+    getDataLastUpdated
+  );
   const { data: nationalSummary } = useQuery(
     "nationalSummary",
     getNationalSummary
   );
 
   const shouldBeTall =
-    (summaryData && summaryData.status !== 'notInTexas') &&
-    ((isFetching && status === "loading") ||
-    summaryData !== undefined) ;
+    summaryData &&
+    summaryData.status !== "notInTexas" &&
+    ((isFetching && status === "loading") || summaryData !== undefined);
   const animatedProps = useSpring({ minHeight: shouldBeTall ? 180 : 50 });
 
   return (
@@ -389,7 +403,7 @@ const App = props => {
         <Segment style={{ fontSize: 16 }} basic>
           {address === "" && (
             <p>
-              Enter any Texan City or Address to find nearby COVID-19 cases.
+              Enter any Texan City, Address, or Zipcode to find nearby COVID-19 cases.
             </p>
           )}
           <animated.div style={animatedProps}>
