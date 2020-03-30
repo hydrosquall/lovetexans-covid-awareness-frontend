@@ -1,15 +1,12 @@
+# LoveTexans.org
+
+This application is a proof of concept for an application that lets users combine multiple public datasets to understand the impact of Coronavirus in their immediate surroundings. It combines with a Serverless/Darklang backend responsible for data aggregation + generating the interactive maps portion of the application.
+
+## NextJS Documentation
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app).
 
 https://nextjs.org/blog/create-next-app
-
-Converted Alex's app to React code (mostly): https://magic.reactjs.net/htmltojsx.htm
-
-## TODO
-
-- Replace Darklang cache with custom redis or elasticcache
-- Responsive/localization
-- Analytics (RUM)
-- Monitoring Lambda functions with DD doesn't really work well with the staging account, so stick to serverless for now.
 
 ## Getting Started
 
@@ -39,3 +36,14 @@ You can check out [the Next.js GitHub repository](https://github.com/zeit/next.j
 The easiest way to deploy your Next.js app is to use the [ZEIT Now Platform](https://zeit.co/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Miscellaneous tooling used
+
+- Converted Alex's app to React code (mostly): https://magic.reactjs.net/htmltojsx.htm
+- Image compression with TinyPNG + ICO Converters
+
+## TODO
+
+- Replace Darklang cache with custom redis or elasticache
+- Responsive/localization
+- Determine roadmap to extend platform to states/regions beyond Texas
