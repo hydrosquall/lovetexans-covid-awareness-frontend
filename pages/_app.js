@@ -13,8 +13,8 @@ if (process.browser && process.NODE_ENV !== 'development') {
   ReactGA.pageview(window.location.pathname + window.location.search);
 
   datadogRum.init({
-    clientToken: "pubec0cd7c11ee53d65f9469cefba029553",
-    applicationId: "48ad9f71-e441-4f15-9047-a0a8a65c5b49"
+    clientToken: "pub135234c64a0ef4da1367a965b5cf2baa",
+    applicationId: "da0319ea-a96e-4d30-adf8-68e72b0b7a36"
   });
 }
 
