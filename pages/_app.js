@@ -8,7 +8,7 @@ import { datadogRum } from "@datadog/browser-rum";
 // Analytics on clientside only
 // https://stackoverflow.com/questions/55151041/window-is-not-defined-in-nextjs-react-app/55151122
 const ANALYTICS_ID = "UA-134441849-4";
-if (process.browser) {
+if (process.browser && process.NODE_ENV !== 'development') {
   ReactGA.initialize(ANALYTICS_ID);
   ReactGA.pageview(window.location.pathname + window.location.search);
 
