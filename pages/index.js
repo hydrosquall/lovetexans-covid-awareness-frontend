@@ -49,6 +49,8 @@ const numberFormatter = format(",");
 
 //github.com/nygardk/react-share#share-button-props
 // const LAST_UPDATED = "March 28 at 8:00 PM";
+const VIDEO_ID = 402573566;
+const VIDEO_PLACEHOLDER = "https://i.vimeocdn.com/video/871731554_640.webp";
 const BUTTON_TITLE = "See the Covid-19 near you. Protect Texans. Stay Home.";
 const ALERT_RED = "#e53935";
 const BUTTONS = [
@@ -118,11 +120,7 @@ const VideoModal = props => (
   <Modal basic closeIcon trigger={props.children}>
     <Modal.Header>About this Tool</Modal.Header>
     <Modal.Content>
-      <Embed
-        id="401929545"
-        placeholder="https://i.vimeocdn.com/video/870852202_640.webp"
-        source="vimeo"
-      />
+      <Embed id={VIDEO_ID} placeholder={VIDEO_PLACEHOLDER} source="vimeo" />
     </Modal.Content>
   </Modal>
 );
@@ -379,7 +377,7 @@ const App = props => {
                 </div>
                 <VideoModal>
                   <Image
-                    src="https://i.vimeocdn.com/video/870852202_640.webp"
+                    src={VIDEO_PLACEHOLDER}
                     height={150}
                     style={{ cursor: "pointer " }}
                     spaced
