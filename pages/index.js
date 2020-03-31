@@ -33,7 +33,8 @@ import {
   List,
   Segment,
   Modal,
-  Embed
+  Embed,
+  Image
 } from "semantic-ui-react";
 
 import { useSpring, animated } from "react-spring";
@@ -113,16 +114,8 @@ const getNationalSummary = async () => {
   return data;
 };
 
-const VideoModal = () => (
-  <Modal
-    basic
-    closeIcon
-    trigger={
-      <a href={"#"} className="video-link">
-        Watch a video about how this tool was built and why
-      </a>
-    }
-  >
+const VideoModal = props => (
+  <Modal basic closeIcon trigger={props.children}>
     <Modal.Header>About this Tool</Modal.Header>
     <Modal.Content>
       <Embed
@@ -213,7 +206,11 @@ const Summary = props => {
           </a>
         </p>
         <div id="videoBlock">
-          <VideoModal></VideoModal>
+          <VideoModal>
+            <a href={"#"} className="video-link">
+              Watch a video about how this tool was built and why
+            </a>
+          </VideoModal>
 
           <div className="dataSourceLink">
             <span className="updateDate"> Updated: {updateTimeMessage} </span>
@@ -229,13 +226,6 @@ const Summary = props => {
         #oneHourData {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.5em;
-        }
-
-        #videoBlock {
-          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 1em;
-          height: 25px;
-          margin-top: 10px;
         }
 
         @media (max-width: 501px) {
@@ -345,7 +335,6 @@ const App = props => {
           as="h1"
           style={{
             paddingTop: `.75em`,
-            paddingBottom: "0.2em",
             fontWeight: 700,
             fontSize: "2.5rem"
           }}
@@ -378,6 +367,26 @@ const App = props => {
                 updateTimeData={updateTimeData}
                 nationalSummary={nationalSummary}
               />
+            )}
+            {!summaryData && (
+              <>
+                <div id="videoBlock" style={{ marginBottom: "10px" }}>
+                  <VideoModal>
+                    <a href={"#"} className="video-link">
+                      Watch a video about how this tool was built and why
+                    </a>
+                  </VideoModal>
+                </div>
+                <VideoModal>
+                  <Image
+                    src="https://i.vimeocdn.com/video/870852202_640.webp"
+                    height={150}
+                    style={{ cursor: "pointer " }}
+                    spaced
+                    bordered
+                  />
+                </VideoModal>
+              </>
             )}
           </animated.div>
         </Segment>
@@ -624,6 +633,14 @@ const Home = props => (
           margin-left: auto;
           margin-right: auto;
         }
+      }
+
+      // Temporary video block
+      #videoBlock {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1em;
+        height: 25px;
+        margin-top: 10px;
       }
     `}</style>
   </div>
