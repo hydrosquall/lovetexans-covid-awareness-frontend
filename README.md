@@ -41,6 +41,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - Converted Alex's app to React code (mostly): https://magic.reactjs.net/htmltojsx.htm
 - Image compression with TinyPNG + ICO Converters
+- Custom thumbnails from Vimeo (note WebP doesn't work on Safari)
+  - https://stackoverflow.com/questions/1361149/get-img-thumbnails-from-vimeo
 
 ## TODO
 

@@ -383,6 +383,7 @@ const App = props => {
                     style={{ cursor: "pointer " }}
                     spaced
                     bordered
+                    rounded
                   />
                 </VideoModal>
               </>
