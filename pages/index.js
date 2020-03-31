@@ -48,7 +48,7 @@ const numberFormatter = format(",");
 
 //github.com/nygardk/react-share#share-button-props
 // const LAST_UPDATED = "March 28 at 8:00 PM";
-const BUTTON_TITLE = "COVID-19 Near You in Texas: Map";
+const BUTTON_TITLE = "See the Covid-19 near you. Protect Texans. Stay Home.";
 const ALERT_RED = "#e53935";
 const BUTTONS = [
   [EmailShareButton, EmailIcon, { subject: BUTTON_TITLE }],
@@ -350,7 +350,7 @@ const App = props => {
             fontSize: "2.5rem"
           }}
         >
-          Officially Reported Covid-19 Cases Near You
+          See the Covid-19 near you. Protect Texans. Stay Home.
         </Header>
 
         <Segment style={{ fontSize: 16 }} basic>
