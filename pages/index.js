@@ -1,6 +1,6 @@
 import axios from "axios";
 import copy from "copy-to-clipboard";
-import { Formik } from "formik";
+
 import Head from "next/head";
 import queryState from "query-state";
 import React, { useCallback, useMemo, useState } from "react";
@@ -30,18 +30,19 @@ import {
   Button,
   Header,
   Icon,
-  Input,
   List,
   Segment,
   Modal,
-  Image,
   Embed
 } from "semantic-ui-react";
-import { titleCase } from "title-case";
 
 import { useSpring, animated } from "react-spring";
 
 import { format } from "d3-format";
+import { titleCase } from "title-case";
+
+import { AlgoliaSearch } from "../components/SearchForm/AlgoliaSearch";
+import { BasicSearch } from "../components/SearchForm/BasicSearch";
 
 const numberFormatter = format(",");
 
@@ -132,62 +133,6 @@ const VideoModal = () => (
     </Modal.Content>
   </Modal>
 );
-
-const AddressForm = props => {
-  return (
-    <>
-      <Formik
-        initialValues={{ address: props.initialAddress }}
-        validate={values => {
-          const errors = {};
-          if (!values.address) {
-            errors.address = "Required";
-          }
-
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          props.setAddress(titleCase(values.address.toLowerCase()));
-          setTimeout(() => {
-            setSubmitting(false);
-          }, 2000);
-        }}
-      >
-        {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-          <form onSubmit={handleSubmit} className="form-inline">
-            <Input
-              action={{
-                content: "Search",
-                onClick: handleSubmit,
-                style: { fontSize: 16 }
-              }}
-              type="text"
-              name="address"
-              fluid={true}
-              style={{ fontSize: 16 }}
-              placeholder={
-                "Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"
-              }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.address}
-              loading={Boolean(props.isLoading)}
-              iconPosition="left"
-              icon="search"
-            />
-          </form>
-        )}
-      </Formik>
-
-      <style jsx>{`
-        .form-inline {
-          margin-bottom: 1em;
-        }
-      `}</style>
-    </>
-  );
-};
 
 const Summary = props => {
   const {
@@ -339,9 +284,17 @@ const Summary = props => {
   );
 };
 
+const formatAddress = address => {
+  return titleCase(address.toLowerCase());
+};
+
 const App = props => {
   const appState = useMemo(() => {
     return queryState({}, { useSearch: true }); // search instead of hash so that servers get it
+  }, []);
+
+  const AddressComponent = useMemo(() => {
+    return props.queryParams.basic ? BasicSearch : AlgoliaSearch;
   }, []);
 
   const [address, setAddressRaw] = useState(() => {
@@ -403,13 +356,14 @@ const App = props => {
         <Segment style={{ fontSize: 16 }} basic>
           {address === "" && (
             <p>
-              Enter any Texan City, Address, or Zipcode to find nearby COVID-19 cases.
+              Enter any Texan City, Address, or Zipcode to find nearby COVID-19
+              cases.
             </p>
           )}
           <animated.div style={animatedProps}>
-            <AddressForm
+            <AddressComponent
               setAddress={setAddress}
-              initialAddress={titleCase(address.toLowerCase())}
+              initialAddress={formatAddress(address)}
               isLoading={normalizedAddress && isFetching}
             />
             {isFetching && normalizedAddress && (
@@ -654,6 +608,16 @@ const Home = props => (
         margin-right: auto;
         margin-bottom: 15px;
       }
+
+      // This is temporarily a global style because width is not exposed
+      // as a prop on the semantic-ui
+      // API surface area, and class selector specificity wasn't working.
+      @media (min-width: 501px) {
+        input {
+          width: 480px;
+        }
+      }
+
       @media (max-width: 501px) {
         .container {
           width: 99% !important;
