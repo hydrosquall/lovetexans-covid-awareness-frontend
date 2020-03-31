@@ -49,8 +49,9 @@ const numberFormatter = format(",");
 
 //github.com/nygardk/react-share#share-button-props
 // const LAST_UPDATED = "March 28 at 8:00 PM";
-const VIDEO_ID = 402573566;
-const VIDEO_PLACEHOLDER = "https://i.vimeocdn.com/video/871731554_640.webp";
+const VIDEO_ID = '402573566';
+// const VIDEO_PLACEHOLDER = "https://i.vimeocdn.com/video/871731554_640.webp";
+const VIDEO_PLACEHOLDER = "/texans_thumbnail.jpg";
 const BUTTON_TITLE = "See the Covid-19 near you. Protect Texans. Stay Home.";
 const ALERT_RED = "#e53935";
 const BUTTONS = [
