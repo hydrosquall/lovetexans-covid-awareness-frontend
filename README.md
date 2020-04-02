@@ -1,6 +1,8 @@
 # LoveTexans.org
 
-This application is a proof of concept for an application that lets users combine multiple public datasets to understand the impact of Coronavirus in their immediate surroundings. It combines with a Serverless/Darklang backend responsible for data aggregation + generating the interactive maps portion of the application.
+[Live Site](https://lovetexans.org/)
+
+This application is a proof of concept for an application that lets users combine multiple public datasets to understand the impact of Coronavirus in their immediate surroundings. It combines with a Serverless Framework (Python)/Darklang backend responsible for data aggregation + generating the interactive maps portion of the application.
 
 ## NextJS Documentation
 
