@@ -1,6 +1,6 @@
 import axios from "axios";
 import copy from "copy-to-clipboard";
-import { Formik } from "formik";
+
 import Head from "next/head";
 import queryState from "query-state";
 import React, { useCallback, useMemo, useState } from "react";
@@ -30,24 +30,26 @@ import {
   Button,
   Header,
   Icon,
-  Input,
   List,
   Segment,
   Modal,
-  Image,
-  Embed
+  Embed,
+  Image
 } from "semantic-ui-react";
-import { titleCase } from "title-case";
 
 import { useSpring, animated } from "react-spring";
 
 import { format } from "d3-format";
+import { titleCase } from "title-case";
+
+import { AlgoliaSearch } from "../components/SearchForm/AlgoliaSearch";
+import { BasicSearch } from "../components/SearchForm/BasicSearch";
 
 const numberFormatter = format(",");
 
 //github.com/nygardk/react-share#share-button-props
 // const LAST_UPDATED = "March 28 at 8:00 PM";
-const BUTTON_TITLE = "COVID-19 Near You in Texas: Map";
+const BUTTON_TITLE = "See the Covid-19 near you. Protect Texans. Stay Home.";
 const ALERT_RED = "#e53935";
 const BUTTONS = [
   [EmailShareButton, EmailIcon, { subject: BUTTON_TITLE }],
@@ -112,16 +114,8 @@ const getNationalSummary = async () => {
   return data;
 };
 
-const VideoModal = () => (
-  <Modal
-    basic
-    closeIcon
-    trigger={
-      <a href={"#"} className="video-link">
-        Watch a video about how this tool was built and why
-      </a>
-    }
-  >
+const VideoModal = props => (
+  <Modal basic closeIcon trigger={props.children}>
     <Modal.Header>About this Tool</Modal.Header>
     <Modal.Content>
       <Embed
@@ -132,62 +126,6 @@ const VideoModal = () => (
     </Modal.Content>
   </Modal>
 );
-
-const AddressForm = props => {
-  return (
-    <>
-      <Formik
-        initialValues={{ address: props.initialAddress }}
-        validate={values => {
-          const errors = {};
-          if (!values.address) {
-            errors.address = "Required";
-          }
-
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          props.setAddress(titleCase(values.address.toLowerCase()));
-          setTimeout(() => {
-            setSubmitting(false);
-          }, 2000);
-        }}
-      >
-        {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-          <form onSubmit={handleSubmit} className="form-inline">
-            <Input
-              action={{
-                content: "Search",
-                onClick: handleSubmit,
-                style: { fontSize: 16 }
-              }}
-              type="text"
-              name="address"
-              fluid={true}
-              style={{ fontSize: 16 }}
-              placeholder={
-                "Ex: Houston, TX or 23 Main Street, Abilene, TX Zipcode"
-              }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.address}
-              loading={Boolean(props.isLoading)}
-              iconPosition="left"
-              icon="search"
-            />
-          </form>
-        )}
-      </Formik>
-
-      <style jsx>{`
-        .form-inline {
-          margin-bottom: 1em;
-        }
-      `}</style>
-    </>
-  );
-};
 
 const Summary = props => {
   const {
@@ -268,7 +206,11 @@ const Summary = props => {
           </a>
         </p>
         <div id="videoBlock">
-          <VideoModal></VideoModal>
+          <VideoModal>
+            <a href={"#"} className="video-link">
+              Watch a video about how this tool was built and why
+            </a>
+          </VideoModal>
 
           <div className="dataSourceLink">
             <span className="updateDate"> Updated: {updateTimeMessage} </span>
@@ -284,13 +226,6 @@ const Summary = props => {
         #oneHourData {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
           font-size: 1.5em;
-        }
-
-        #videoBlock {
-          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 1em;
-          height: 25px;
-          margin-top: 10px;
         }
 
         @media (max-width: 501px) {
@@ -339,9 +274,17 @@ const Summary = props => {
   );
 };
 
+const formatAddress = address => {
+  return titleCase(address.toLowerCase());
+};
+
 const App = props => {
   const appState = useMemo(() => {
     return queryState({}, { useSearch: true }); // search instead of hash so that servers get it
+  }, []);
+
+  const AddressComponent = useMemo(() => {
+    return props.queryParams.basic ? BasicSearch : AlgoliaSearch;
   }, []);
 
   const [address, setAddressRaw] = useState(() => {
@@ -392,24 +335,24 @@ const App = props => {
           as="h1"
           style={{
             paddingTop: `.75em`,
-            paddingBottom: "0.2em",
             fontWeight: 700,
             fontSize: "2.5rem"
           }}
         >
-          Officially Reported Covid-19 Cases Near You
+          See the Covid-19 near you. Protect Texans. Stay Home.
         </Header>
 
         <Segment style={{ fontSize: 16 }} basic>
           {address === "" && (
             <p>
-              Enter any Texan City, Address, or Zipcode to find nearby COVID-19 cases.
+              Enter any Texan City, Address, or Zipcode to find nearby COVID-19
+              cases.
             </p>
           )}
           <animated.div style={animatedProps}>
-            <AddressForm
+            <AddressComponent
               setAddress={setAddress}
-              initialAddress={titleCase(address.toLowerCase())}
+              initialAddress={formatAddress(address)}
               isLoading={normalizedAddress && isFetching}
             />
             {isFetching && normalizedAddress && (
@@ -424,6 +367,26 @@ const App = props => {
                 updateTimeData={updateTimeData}
                 nationalSummary={nationalSummary}
               />
+            )}
+            {!summaryData && (
+              <>
+                <div id="videoBlock" style={{ marginBottom: "10px" }}>
+                  <VideoModal>
+                    <a href={"#"} className="video-link">
+                      Watch a video about how this tool was built and why
+                    </a>
+                  </VideoModal>
+                </div>
+                <VideoModal>
+                  <Image
+                    src="https://i.vimeocdn.com/video/870852202_640.webp"
+                    height={150}
+                    style={{ cursor: "pointer " }}
+                    spaced
+                    bordered
+                  />
+                </VideoModal>
+              </>
             )}
           </animated.div>
         </Segment>
@@ -654,12 +617,30 @@ const Home = props => (
         margin-right: auto;
         margin-bottom: 15px;
       }
+
+      // This is temporarily a global style because width is not exposed
+      // as a prop on the semantic-ui
+      // API surface area, and class selector specificity wasn't working.
+      @media (min-width: 501px) {
+        input {
+          width: 480px;
+        }
+      }
+
       @media (max-width: 501px) {
         .container {
           width: 99% !important;
           margin-left: auto;
           margin-right: auto;
         }
+      }
+
+      // Temporary video block
+      #videoBlock {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1em;
+        height: 25px;
+        margin-top: 10px;
       }
     `}</style>
   </div>

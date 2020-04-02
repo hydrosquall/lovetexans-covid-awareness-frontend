@@ -47,3 +47,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - Replace Darklang cache with custom redis or elasticache
 - Responsive/localization
 - Determine roadmap to extend platform to states/regions beyond Texas
+- Put Algolia behind a feature flag, toggle between which input is used depending on API key availability
+- Extend API to support querying map cases + summary by lat/lng instead of URL
+- Make util folder for titlecasing
+- Config - set up prettier, typescript, basic commit hooks
