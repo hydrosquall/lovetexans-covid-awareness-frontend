@@ -12,16 +12,16 @@ import {
   FacebookShareButton,
   LinkedinIcon,
   LinkedinShareButton,
-  PocketIcon,
-  PocketShareButton,
+  // PocketIcon,
+  // PocketShareButton,
   RedditIcon,
   RedditShareButton,
-  TelegramIcon,
-  TelegramShareButton,
+  // TelegramIcon,
+  // TelegramShareButton,
   TwitterIcon,
   TwitterShareButton,
-  WhatsappIcon,
-  WhatsappShareButton
+  // WhatsappIcon,
+  // WhatsappShareButton
 } from "react-share";
 
 import { ReactSEOMetaTags } from "react-seo-meta-tags";
@@ -83,9 +83,9 @@ const BUTTONS = [
     }
   ],
   [RedditShareButton, RedditIcon, { title: BUTTON_TITLE }],
-  [TelegramShareButton, TelegramIcon, { title: BUTTON_TITLE }],
-  [PocketShareButton, PocketIcon, { title: BUTTON_TITLE }],
-  [WhatsappShareButton, WhatsappIcon, { title: BUTTON_TITLE }]
+  // [TelegramShareButton, TelegramIcon, { title: BUTTON_TITLE }],
+  // [PocketShareButton, PocketIcon, { title: BUTTON_TITLE }],
+  // [WhatsappShareButton, WhatsappIcon, { title: BUTTON_TITLE }]
 ];
 
 // API Fetching
@@ -138,7 +138,7 @@ const Summary = props => {
     props.updateTimeData || {};
   const { usConfirmed, usDeaths } = props.nationalSummary || {};
 
-  const updateTimeMessage = `${updateMonth}/${updateDay} at ${updateHour}:00 ${updateTimezone}`;
+  const updateTimeMessage = `${updateMonth}/${updateDay} at ${updateHour}AM ${updateTimezone}`;
   const nationalMessage = `${numberFormatter(
     usConfirmed
   )} Americans have been infected, ${numberFormatter(usDeaths)} have died.`;
@@ -335,7 +335,7 @@ const App = props => {
           style={{
             paddingTop: `.75em`,
             fontWeight: 700,
-            fontSize: "2.5rem"
+            // fontSize: "2.5rem"
           }}
         >
           See the Covid-19 near you. Protect Texans. Stay Home.
@@ -449,13 +449,15 @@ const App = props => {
             <List.Item key={"clipboardKey"}>
               <Button
                 icon
+                compact
                 labelPosition="left"
+                size="small"
                 onClick={() => {
                   copy(window.location);
                 }}
               >
                 <Icon name="copy"></Icon>
-                Click to copy link to your clipboard
+                Copy link
               </Button>
             </List.Item>
             {BUTTONS.map(
@@ -641,6 +643,12 @@ const Home = props => (
         font-size: 1em;
         height: 25px;
         margin-top: 10px;
+      }
+
+      @media (max-width: 400px) {
+        #videoBlock {
+          font-size: .7em;
+        }
       }
     `}</style>
   </div>
