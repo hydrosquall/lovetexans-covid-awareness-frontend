@@ -451,7 +451,7 @@ const App = props => {
                 icon
                 compact
                 labelPosition="left"
-                size="small"
+                size="mini"
                 onClick={() => {
                   copy(window.location);
                 }}
