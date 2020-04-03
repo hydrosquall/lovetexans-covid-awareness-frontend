@@ -1,6 +1,8 @@
 import axios from "axios";
 import copy from "copy-to-clipboard";
 
+import ReactGA from "react-ga";
+
 import Head from "next/head";
 import queryState from "query-state";
 import React, { useCallback, useMemo, useState } from "react";
@@ -117,14 +119,20 @@ const getNationalSummary = async () => {
   return data;
 };
 
-const VideoModal = props => (
-  <Modal basic closeIcon trigger={props.children}>
-    <Modal.Header>About this Tool</Modal.Header>
-    <Modal.Content>
-      <Embed id={VIDEO_ID} placeholder={VIDEO_PLACEHOLDER} source="vimeo" />
-    </Modal.Content>
-  </Modal>
-);
+const VideoModal = props => {
+  const handleOpen = useCallback(() => {
+    ReactGA.modalview("/about-video");
+  });
+
+  return (
+    <Modal basic closeIcon trigger={props.children} onOpen={handleOpen}>
+      <Modal.Header>Why we built this</Modal.Header>
+      <Modal.Content>
+        <Embed id={VIDEO_ID} placeholder={VIDEO_PLACEHOLDER} source="vimeo" />
+      </Modal.Content>
+    </Modal>
+  );
+};
 
 const Summary = props => {
   const {
