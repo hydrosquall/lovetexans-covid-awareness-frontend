@@ -76,10 +76,16 @@ export const AlgoliaSearch = props => {
                   results.hits
                     .filter(hit => hit.administrative[0] === "Texas")
                     .map((hit, i) => {
+                      const {
+                        locale_names = [],
+                        administrative = [],
+                        county = [],
+                        objectID = i
+                      } = hit;
                       return {
-                        title: `${hit.locale_names[0]}, Texas`,
-                        description: `${hit.county[0]}`,
-                        key: `${hit.objectID}`
+                        title: `${locale_names[0]}, ${administrative[0]}`,
+                        description: `${county[0] || ""}`,
+                        key: `${objectID}`
                       };
                     })
                 );
