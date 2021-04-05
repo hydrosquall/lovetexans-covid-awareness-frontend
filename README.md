@@ -1,6 +1,8 @@
-# LoveTexans.org
+Note: this site is an early prototype of what became <https://covidcommitment.org>. This code remains public for historical research purposes.
 
-[Live Site](https://lovetexans.org/)
+## LoveTexans.org
+
+[Live Site](https://lovetexans.now.sh/)
 
 This application is a proof of concept for an application that lets users combine multiple public datasets to understand the impact of Coronavirus in their immediate surroundings. It combines with a Serverless Framework (Python)/Darklang backend responsible for data aggregation + generating the interactive maps portion of the application.
 
