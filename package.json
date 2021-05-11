@@ -15,7 +15,7 @@
     "copy-to-clipboard": "^3.3.1",
     "d3-format": "^1.4.3",
     "formik": "^2.1.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "next": "9.3.2",
     "qs": "^6.9.3",
     "query-state": "^4.3.0",
